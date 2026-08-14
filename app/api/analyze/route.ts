@@ -234,12 +234,14 @@ export async function POST(req: NextRequest) {
 
     const MODELS = [
       'gemini-2.5-flash',
-      'gemini-flash-latest',
       'gemini-2.0-flash',
       'gemini-2.5-flash-lite',
+      'gemini-1.5-flash',
     ];
     let geminiResponse: Response | null = null;
     let lastError = '';
+    // Status codes that mean "try next model" vs "fatal error"
+    const RETRY_STATUSES = new Set([400, 404, 429, 503]);
 
     for (const model of MODELS) {
       const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
@@ -255,25 +257,26 @@ export async function POST(req: NextRequest) {
           body: JSON.stringify({
             contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
             generationConfig: {
-              temperature:     0.1,
-              topP:            0.8,
-              topK:            40,
-              maxOutputTokens: 2048,
-              candidateCount:  1,
-              responseMimeType: 'application/json',
+              temperature:      0.1,
+              topP:             0.8,
+              topK:             40,
+              maxOutputTokens:  2048,
+              candidateCount:   1,
             },
           }),
           signal: controller.signal,
         });
 
-        if (res.status === 429 || res.status === 503) {
-          lastError = `Error ${res.status} on ${model}`;
-          console.warn(`[Proofly] ${res.status} hit on ${model}, trying next model...`);
+        if (RETRY_STATUSES.has(res.status)) {
+          const errText = await res.text();
+          lastError = `HTTP ${res.status} on ${model}: ${errText.slice(0, 200)}`;
+          console.warn(`[Proofly] ${res.status} hit on ${model}, trying next model... Body: ${errText.slice(0, 200)}`);
           continue; // try next model
         }
 
         geminiResponse = res;
-        break; // got a non-429 response
+        console.log(`[Proofly] ✅ Got response from ${model} (status ${res.status})`);
+        break; // got a usable response
       } catch (e) {
         lastError = (e as Error).message;
         console.warn(`[Proofly] ${model} failed:`, lastError);
