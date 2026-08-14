@@ -217,7 +217,7 @@ export default function TechnologyPage() {
           className="mb-12 text-center"
         >
           <h2 className="text-4xl font-black text-white mb-4">The Complete Stack</h2>
-          <p className="text-lg text-[#8A8AA0] max-w-2xl mx-auto">A comprehensive breakdown of every library, framework, and cloud service meticulously chosen to power the PROOFLY platform.</p>
+          <p className="text-lg text-[#8A8AA0] max-w-2xl mx-auto">A comprehensive breakdown of every library, framework, and cloud service meticulously chosen to power the Proofly platform.</p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">

@@ -1,4 +1,4 @@
-// TypeScript interfaces for the PROOFLY analysis pipeline
+// TypeScript interfaces for the Proofly analysis pipeline
 
 export type Language = 'en' | 'hi' | 'ta';
 export type InputType = 'text' | 'url' | 'media';

@@ -66,7 +66,7 @@ export default function NavBar() {
           >
             <Image
               src="/logo.png"
-              alt="PROOFLY Logo"
+              alt="Proofly Logo"
               width={32}
               height={32}
               className="rounded-full object-cover ring-2 ring-[#4F8EFF]/30 group-hover:ring-[#4F8EFF]/60 transition-all"
