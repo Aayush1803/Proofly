@@ -95,7 +95,7 @@ export default function AnalyzePage() {
                   Analysis <span className="gradient-text">Report</span>
                 </h2>
                 <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>
-                  Mitra AI has completed the 9-step multimodal fact-check pipeline
+                  Proofly has completed the 9-step multimodal fact-check pipeline
                 </p>
               </motion.div>
             </div>

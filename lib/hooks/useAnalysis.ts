@@ -136,7 +136,7 @@ export function useAnalysis(): UseAnalysisReturn {
             Math.round(Math.max(0, Math.min(100, Number(v ?? fallback))));
 
           const mediaAnalysis: AnalysisResult = {
-            id: `mitra-${Date.now()}`,
+            id: `proofly-${Date.now()}`,
             timestamp: new Date().toISOString(),
             inputType: 'media',
             language: 'en',
@@ -176,7 +176,7 @@ export function useAnalysis(): UseAnalysisReturn {
             },
             counterMessage: {
               text: String(g.counter_message ?? ''),
-              whatsappText: `*🔍 MITRA AI MEDIA FACT CHECK*\n\nVerdict: *${trustScore < 35 ? 'FALSE' : trustScore < 65 ? 'MISLEADING' : 'TRUE'}*\n\n${String(g.counter_message ?? '')}\n\n🔗 Verified by Mitra AI\n\n_#FactCheck #StopMisinformation #MitraAI_`,
+              whatsappText: `*🔍 PROOFLY MEDIA FACT CHECK*\n\nVerdict: *${trustScore < 35 ? 'FALSE' : trustScore < 65 ? 'MISLEADING' : 'TRUE'}*\n\n${String(g.counter_message ?? '')}\n\n🔗 Verified by PROOFLY\n\n_#FactCheck #StopMisinformation #Proofly_`,
             },
             processingTime: 0,
             modelVersion: 'gemini-2.0-flash-multimodal',

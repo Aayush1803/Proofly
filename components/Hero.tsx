@@ -122,7 +122,7 @@ export default function Hero({ onSubmit, isLoading }: HeroProps) {
         <p className="text-lg max-w-xl mx-auto mt-5 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
           Paste a WhatsApp forward, a suspicious link, or upload a video.
           <br />
-          <span style={{ color: 'var(--text-primary)' }} className="font-semibold">Mitra AI</span> runs a 9-step deep analysis in seconds.
+          <span style={{ color: 'var(--text-primary)' }} className="font-semibold">Proofly</span> runs a 9-step deep analysis in seconds.
         </p>
       </motion.div>
 
@@ -367,32 +367,24 @@ export default function Hero({ onSubmit, isLoading }: HeroProps) {
 
 
       {/* Stats row */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="flex flex-wrap justify-center gap-8 mt-16 relative z-10"
-      >
-        {/* Phase 3 — @design-spells: counter-reveal staggered animation on stat values */}
-        <div className="flex flex-wrap justify-center gap-8 mt-16 relative z-10">
-          {[
-            { value: '23', label: 'Indian Languages' },
-            { value: '9-Step', label: 'AI Pipeline' },
-            { value: 'Free', label: 'Always Free' },
-            { value: '<5s', label: 'Avg. Response Time' },
-          ].map((stat, i) => (
-            <div key={stat.label} className="text-center">
-              <div
-                className="stat-number text-2xl gradient-text counter-reveal"
-                style={{ animationDelay: `${0.5 + i * 0.12}s` }}
-              >
-                {stat.value}
-              </div>
-              <div className="text-xs mt-1 mono-font" style={{ color: 'var(--text-muted)' }}>{stat.label}</div>
+      <div className="flex flex-wrap justify-center gap-8 mt-16 relative z-10">
+        {[
+          { value: '23', label: 'Indian Languages' },
+          { value: '9-Step', label: 'AI Pipeline' },
+          { value: 'Free', label: 'Always Free' },
+          { value: '<5s', label: 'Avg. Response Time' },
+        ].map((stat, i) => (
+          <div key={stat.label} className="text-center">
+            <div
+              className="stat-number text-2xl gradient-text counter-reveal"
+              style={{ animationDelay: `${0.5 + i * 0.12}s` }}
+            >
+              {stat.value}
             </div>
-          ))}
-        </div>
-      </motion.div>
+            <div className="text-xs mt-1 mono-font" style={{ color: 'var(--text-muted)' }}>{stat.label}</div>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }

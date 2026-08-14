@@ -11,7 +11,7 @@ const TECH_PILLARS = [
     icon: <Cpu className="w-7 h-7" />,
     title: 'Native Multimodal AI Engine (Gemini 2.5 Flash)',
     color: '#4F8EFF',
-    desc: 'At the heart of Mitra lies the Google Gemini 2.5 Flash model, accessed via the GenerativeLanguage API. We bypass fragmented legacy OCR or audio transcription pipelines. Instead, Mitra streams Base64-encoded images, video, audio, and documents directly to Gemini. This native multimodal capability ensures that visual context, spoken tone, and on-screen text are evaluated holistically within a single unified embedding space.',
+    desc: 'At the heart of Proofly lies the Google Gemini 2.5 Flash model, accessed via the GenerativeLanguage API. We bypass fragmented legacy OCR or audio transcription pipelines. Instead, Proofly streams Base64-encoded images, video, audio, and documents directly to Gemini. This native multimodal capability ensures that visual context, spoken tone, and on-screen text are evaluated holistically within a single unified embedding space.',
     details: [
       'Direct Base64 multimodal streaming for zero-loss ingestion',
       'Native handling of MP4, MP3, JPEG, PDF, and 15+ other formats',
@@ -23,7 +23,7 @@ const TECH_PILLARS = [
     icon: <Globe className="w-7 h-7" />,
     title: 'Advanced 23-Language NLP & Contextualization',
     color: '#22D3EE',
-    desc: 'Misinformation in India thrives in regional echo chambers. Mitra possesses deep linguistic intelligence to automatically detect, parse, and analyze all 23 official Indian languages (8th Schedule). Furthermore, it is specifically tuned to comprehend code-mixed colloquialisms like Hinglish, Tanglish, and localized WhatsApp slang without losing factual fidelity.',
+    desc: 'Misinformation in India thrives in regional echo chambers. Proofly possesses deep linguistic intelligence to automatically detect, parse, and analyze all 23 official Indian languages (8th Schedule). Furthermore, it is specifically tuned to comprehend code-mixed colloquialisms like Hinglish, Tanglish, and localized WhatsApp slang without losing factual fidelity.',
     details: [
       'Seamless support for Hindi, Bengali, Tamil, Telugu, Marathi, etc.',
       'Handles complex scripts: Devanagari, Latin, and regional graphemes',
@@ -35,7 +35,7 @@ const TECH_PILLARS = [
     icon: <Server className="w-7 h-7" />,
     title: 'Netlify Edge Serverless Execution',
     color: '#7C3AED',
-    desc: 'Mitra operates on a highly optimized Next.js 14 App Router architecture deployed exclusively on Netlify. While we initially evaluated traditional containerized deployments (like Railway) for our backend, transitioning to Netlify Edge Serverless Functions provided unparalleled horizontal scaling and reduced cold-boot latency for our API routes. We utilize extended maxDuration configurations (up to 60s) to securely process intensive video and audio payloads.',
+    desc: 'Proofly operates on a highly optimized Next.js 14 App Router architecture deployed exclusively on Netlify. While we initially evaluated traditional containerized deployments (like Railway) for our backend, transitioning to Netlify Edge Serverless Functions provided unparalleled horizontal scaling and reduced cold-boot latency for our API routes. We utilize extended maxDuration configurations (up to 60s) to securely process intensive video and audio payloads.',
     details: [
       'Netlify optimized serverless deployment for global edge routing',
       'Next.js 14 App Router API Routes for backend orchestration',
@@ -59,7 +59,7 @@ const TECH_PILLARS = [
     icon: <Layers className="w-7 h-7" />,
     title: 'Intelligent Cheerio Scraping & Interception',
     color: '#EF4444',
-    desc: 'URLs are more than links; they are dense knowledge graphs. Mitra employs a custom-built, highly aggressive web scraper using Cheerio and the Node.js Fetch API. It strips away digital noise (ads, modals, trackers) using 15+ semantic HTML fallback selectors to extract pristine article bodies. For YouTube, it natively intercepts TimedText XML APIs to extract video transcripts without headless browser overhead.',
+    desc: 'URLs are more than links; they are dense knowledge graphs. Proofly employs a custom-built, highly aggressive web scraper using Cheerio and the Node.js Fetch API. It strips away digital noise (ads, modals, trackers) using 15+ semantic HTML fallback selectors to extract pristine article bodies. For YouTube, it natively intercepts TimedText XML APIs to extract video transcripts without headless browser overhead.',
     details: [
       'Cheerio-powered semantic HTML noise removal and extraction',
       'YouTube TimedText XML caption and metadata extraction',
@@ -131,7 +131,7 @@ export default function TechnologyPage() {
             </h1>
 
             <p className="text-xl text-[#8A8AA0] leading-relaxed max-w-3xl mx-auto">
-              Mitra&apos;s full-stack architecture represents the cutting edge of modern web development. By combining serverless primitives across Netlify and Neon with the bleeding-edge reasoning capabilities of Google Gemini 2.5, we have constructed an infrastructure capable of combating misinformation in real-time.
+              Proofly&apos;s full-stack architecture represents the cutting edge of modern web development. By combining serverless primitives across Netlify and Neon with the bleeding-edge reasoning capabilities of Google Gemini 2.5, we have constructed an infrastructure capable of combating misinformation in real-time.
             </p>
           </motion.div>
         </div>
@@ -217,7 +217,7 @@ export default function TechnologyPage() {
           className="mb-12 text-center"
         >
           <h2 className="text-4xl font-black text-white mb-4">The Complete Stack</h2>
-          <p className="text-lg text-[#8A8AA0] max-w-2xl mx-auto">A comprehensive breakdown of every library, framework, and cloud service meticulously chosen to power the Mitra AI platform.</p>
+          <p className="text-lg text-[#8A8AA0] max-w-2xl mx-auto">A comprehensive breakdown of every library, framework, and cloud service meticulously chosen to power the PROOFLY platform.</p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -310,7 +310,7 @@ export default function TechnologyPage() {
                 className="inline-flex items-center justify-center gap-3 px-10 py-4 rounded-2xl bg-gradient-to-r from-[#4F8EFF] to-[#7C3AED] text-white font-bold hover:opacity-90 transition-all hover:scale-105 shadow-xl shadow-[#4F8EFF]/25 text-lg"
               >
                 <Zap className="w-5 h-5" />
-                Initialize Mitra Engine
+                Initialize Proofly Engine
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </div>

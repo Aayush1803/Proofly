@@ -49,7 +49,7 @@ export default function ProcessingState({ isVisible, currentStep }: ProcessingSt
                   </div>
                   Deep Analysis Running
                 </h3>
-                <p className="text-xs text-[#8A8AA0] mt-1 font-mono">mitra-v2.1.0-multimodal · Processing{dots}</p>
+                <p className="text-xs text-[#8A8AA0] mt-1 font-mono">proofly-v2.1.0-multimodal · Processing{dots}</p>
               </div>
               <div className="text-right">
                 <div className="text-2xl font-black gradient-text">{Math.round((currentStep / STEPS.length) * 100)}%</div>

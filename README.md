@@ -1,7 +1,7 @@
-# Mitra AI 🛡️
+# PROOFLY 🛡️
 
 **Truth has a new guardian.**  
-Mitra AI is India's most advanced, fully multimodal fact-checking platform. Engineered to counter regional misinformation across digital platforms like WhatsApp, X (formerly Twitter), Facebook, and YouTube, Mitra is the ultimate defense against fake news, deepfakes, and synthetic media. Built to handle complex code-mixed languages and deeply entrenched India-specific cultural contexts, Mitra detects, analyzes, cross-references, and debunks false claims in seconds using cutting-edge Generative AI.
+PROOFLY is India's most advanced, fully multimodal fact-checking platform. Engineered to counter regional misinformation across digital platforms like WhatsApp, X (formerly Twitter), Facebook, and YouTube, Proofly is the ultimate defense against fake news, deepfakes, and synthetic media. Built to handle complex code-mixed languages and deeply entrenched India-specific cultural contexts, Proofly detects, analyzes, cross-references, and debunks false claims in seconds using cutting-edge Generative AI.
 
 ---
 
@@ -13,7 +13,7 @@ Mitra AI is India's most advanced, fully multimodal fact-checking platform. Engi
   - **Media Uploads:** Directly upload images, audio clips, video files, and PDF documents. The native multimodal pipeline handles Base64 extraction to seamlessly process media without relying on third-party OCR or disjointed transcribers.
 
 - **Unmatched Multilingual Intelligence (23 Official Languages):** 
-  - Mitra automatically detects and analyzes content across all 23 official Indian languages as mandated by the 8th Schedule of the Indian Constitution.
+  - Proofly automatically detects and analyzes content across all 23 official Indian languages as mandated by the 8th Schedule of the Indian Constitution.
   - *Supported Languages:* Hindi, English, Bengali, Telugu, Marathi, Tamil, Urdu, Gujarati, Kannada, Malayalam, Odia, Punjabi, Assamese, Maithili, Sanskrit, Kashmiri, Nepali, Sindhi, Konkani, Dogri, Manipuri, Bodo, and Santali.
   - Effectively parses complex Indian code-mixed formats such as Hinglish and Tanglish, interpreting regional slang and localized idioms.
 
@@ -38,7 +38,7 @@ Mitra AI is India's most advanced, fully multimodal fact-checking platform. Engi
 
 ## 🛠️ The Architecture & Technology Stack
 
-Mitra AI operates on a highly resilient, globally distributed serverless full-stack architecture designed for instantaneous latency and massive concurrent scaling.
+PROOFLY operates on a highly resilient, globally distributed serverless full-stack architecture designed for instantaneous latency and massive concurrent scaling.
 
 - **Frontend & Core Framework:** 
   - **Next.js 14 (App Router):** Leveraging React Server Components (RSC) and Server Actions for highly optimized, SSR/SSG workflows.
@@ -53,7 +53,7 @@ Mitra AI operates on a highly resilient, globally distributed serverless full-st
   - **Prisma ORM:** Enforcing strict end-to-end type safety, automated schema migrations, and optimized connection pooling bridging the edge network and the Neon database.
 
 - **Artificial Intelligence Engine:** 
-  - **Google Gemini 2.5 Flash:** The core brain of Mitra. We bypass older fragmented NLP pipelines in favor of Gemini's native multimodal API (`GenerativeLanguage`). This allows Mitra to natively "see" videos and "hear" audio directly via inline Base64 streaming, ensuring maximum contextual awareness without hallucinations.
+  - **Google Gemini 2.5 Flash:** The core brain of Proofly. We bypass older fragmented NLP pipelines in favor of Gemini's native multimodal API (`GenerativeLanguage`). This allows Proofly to natively "see" videos and "hear" audio directly via inline Base64 streaming, ensuring maximum contextual awareness without hallucinations.
 
 - **Advanced Web Scraping Engine:** 
   - **Cheerio & Fetch API:** A custom-built, highly intelligent pipeline that strips away web noise (ads, modals, trackers) to extract pristine article bodies using 15+ semantic HTML fallback selectors.
@@ -78,7 +78,7 @@ Mitra AI operates on a highly resilient, globally distributed serverless full-st
 ## 🚀 Getting Started Locally
 
 ### Prerequisites
-To run Mitra AI locally, you must have the following installed and configured:
+To run PROOFLY locally, you must have the following installed and configured:
 - **Node.js** (v18.17.0 or higher)
 - **Google Gemini API Key** (Accessible via Google AI Studio)
 - **Neon Postgres URL** (Or any valid PostgreSQL connection string)
@@ -88,8 +88,8 @@ To run Mitra AI locally, you must have the following installed and configured:
 
 1. **Clone & Install Dependencies:**
    ```bash
-   git clone https://github.com/Aayush1803/MitraAi.git
-   cd MitraAi
+   git clone https://github.com/Aayush1803/Proofly.git
+   cd Proofly
    npm install
    ```
 
@@ -121,11 +121,11 @@ To run Mitra AI locally, you must have the following installed and configured:
    ```bash
    npm run dev
    ```
-   *Navigate to `http://localhost:3000` to interact with the Mitra AI platform.*
+   *Navigate to `http://localhost:3000` to interact with the PROOFLY platform.*
 
 ---
 
 ## 📜 Ethical Considerations & License
-Mitra AI is an advanced demonstration-grade tool built to showcase the power of modern AI in the fight against misinformation. While heavily optimized and strictly prompted for factual accuracy, Generative AI models can occasionally hallucinate. Users must always cross-reference critical, life-altering claims with professional, credentialed fact-checking organizations.
+PROOFLY is an advanced demonstration-grade tool built to showcase the power of modern AI in the fight against misinformation. While heavily optimized and strictly prompted for factual accuracy, Generative AI models can occasionally hallucinate. Users must always cross-reference critical, life-altering claims with professional, credentialed fact-checking organizations.
 
 *Engineered with precision to bring truth back to India's information reality.*

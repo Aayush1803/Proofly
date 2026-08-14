@@ -146,7 +146,7 @@ export default function ProfilePage() {
               className="flex-1"
             >
               <div className="flex flex-wrap items-center gap-3 mb-1">
-                <h1 className="text-3xl font-black text-white">{user.name ?? 'Mitra User'}</h1>
+                <h1 className="text-3xl font-black text-white">{user.name ?? 'Proofly User'}</h1>
                 <span className="flex items-center gap-1.5 text-xs font-semibold bg-green-500/15 text-green-400 border border-green-500/25 px-2.5 py-1 rounded-full">
                   <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
                   Active
@@ -159,7 +159,7 @@ export default function ProfilePage() {
                 </span>
                 <span className="flex items-center gap-1.5">
                   <Shield className="w-3.5 h-3.5 text-[#4F8EFF]" />
-                  Mitra AI Member
+                  Proofly Member
                 </span>
               </div>
             </motion.div>

@@ -66,7 +66,7 @@ export default function NavBar() {
           >
             <Image
               src="/logo.png"
-              alt="Mitra AI Logo"
+              alt="PROOFLY Logo"
               width={32}
               height={32}
               className="rounded-full object-cover ring-2 ring-[#4F8EFF]/30 group-hover:ring-[#4F8EFF]/60 transition-all"
@@ -75,7 +75,7 @@ export default function NavBar() {
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#4F8EFF]/0 to-[#7C3AED]/0 group-hover:from-[#4F8EFF]/20 group-hover:to-[#7C3AED]/20 transition-all blur-sm" />
           </motion.div>
           <span style={{ color: 'var(--text-primary)' }} className="font-bold text-base tracking-tight">
-            Mitra<span className="text-[#4F8EFF]"> AI</span>
+            Proofly<span className="text-[#4F8EFF]"> AI</span>
           </span>
           <span className="hidden sm:inline-block text-[9px] font-mono border rounded px-1.5 py-0.5"
             style={{ color: 'var(--text-muted)', borderColor: 'var(--bg-border)' }}>

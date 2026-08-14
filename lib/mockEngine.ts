@@ -144,15 +144,15 @@ const CONTEXT = [
 function getCounterMessage(score: number, language: string) {
   const tag = score < 35 ? 'FALSE' : score < 65 ? 'MISLEADING' : 'TRUE';
   const en = {
-    text: `🚫 FACT CHECK [${tag}]: The viral claim circulating about this topic has been reviewed by multiple independent fact-checkers including Reuters, Alt News, and BOOM Live. ${score < 50 ? 'The information is inaccurate or missing critical context.' : 'The information has been verified as largely accurate.'} Before sharing, please verify with trusted sources. #MitraAI #FactCheck #StopMisinformation`,
-    whatsappText: `*MITRA AI FACT CHECK* ✅\n\nStatus: *${tag}*\n\n${score < 50 ? '❌ This message contains false or misleading information.' : '✅ This message has been verified as accurate.'}\n\nVerified by: Reuters, Alt News, BOOM Live\n\n🔗 Full analysis: https://mitra-ai.vercel.app\n\n_Please don\'t forward unverified messages. #FactCheck_`,
+    text: `🚫 FACT CHECK [${tag}]: The viral claim circulating about this topic has been reviewed by multiple independent fact-checkers including Reuters, Alt News, and BOOM Live. ${score < 50 ? 'The information is inaccurate or missing critical context.' : 'The information has been verified as largely accurate.'} Before sharing, please verify with trusted sources. #Proofly #FactCheck #StopMisinformation`,
+    whatsappText: `*PROOFLY FACT CHECK* ✅\n\nStatus: *${tag}*\n\n${score < 50 ? '❌ This message contains false or misleading information.' : '✅ This message has been verified as accurate.'}\n\nVerified by: Reuters, Alt News, BOOM Live\n\n🔗 Full analysis: https://proofly.vercel.app\n\n_Please don\'t forward unverified messages. #FactCheck_`,
   };
   const hi = {
-    text: `🚫 तथ्य जांच [${tag}]: इस वायरल दावे की कई स्वतंत्र संस्थाओं द्वारा जांच की गई है। ${score < 50 ? 'यह जानकारी गलत या भ्रामक है।' : 'यह जानकारी सत्यापित है।'} कृपया शेयर करने से पहले विश्वसनीय स्रोतों से जांचें। #MitraAI`,
+    text: `🚫 तथ्य जांच [${tag}]: इस वायरल दावे की कई स्वतंत्र संस्थाओं द्वारा जांच की गई है। ${score < 50 ? 'यह जानकारी गलत या भ्रामक है।' : 'यह जानकारी सत्यापित है।'} कृपया शेयर करने से पहले विश्वसनीय स्रोतों से जांचें। #Proofly`,
     whatsappText: `*मित्र AI तथ्य जांच* ✅\n\nस्थिति: *${tag}*\n\n${score < 50 ? '❌ इस संदेश में गलत जानकारी है।' : '✅ यह संदेश सत्यापित है।'}\n\nसत्यापित: Reuters, Alt News\n\n#FactCheck #StopMisinformation`,
   };
   const ta = {
-    text: `🚫 உண்மை சோதனை [${tag}]: இந்த வைரல் கூற்று பல சுயாதீன நிறுவனங்களால் சரிபார்க்கப்பட்டது. ${score < 50 ? 'இந்தத் தகவல் தவறானது.' : 'இந்தத் தகவல் சரிபார்க்கப்பட்டது.'} #MitraAI #FactCheck`,
+    text: `🚫 உண்மை சோதனை [${tag}]: இந்த வைரல் கூற்று பல சுயாதீன நிறுவனங்களால் சரிபார்க்கப்பட்டது. ${score < 50 ? 'இந்தத் தகவல் தவறானது.' : 'இந்தத் தகவல் சரிபார்க்கப்பட்டது.'} #Proofly #FactCheck`,
     whatsappText: `*மித்ரா AI உண்மை சோதனை* ✅\n\nநிலை: *${tag}*\n\n${score < 50 ? '❌ இந்த செய்தியில் தவறான தகவல் உள்ளது.' : '✅ இந்த செய்தி சரிபார்க்கப்பட்டது.'}\n\n#FactCheck`,
   };
 
@@ -167,7 +167,7 @@ export function generateAnalysis(req: AnalyzeRequest): AnalysisResult {
   const contextIdx = Math.floor(Math.random() * CONTEXT.length);
 
   return {
-    id: `mitra-${Date.now()}`,
+    id: `proofly-${Date.now()}`,
     timestamp: new Date().toISOString(),
     inputType: req.type,
     language: req.language,
@@ -191,6 +191,6 @@ export function generateAnalysis(req: AnalyzeRequest): AnalysisResult {
     counterMessage: getCounterMessage(trustScore, req.language),
 
     processingTime: Math.round(2400 + Math.random() * 1200),
-    modelVersion: 'mitra-v2.1.0-multimodal',
+    modelVersion: 'proofly-v2.1.0-multimodal',
   };
 }

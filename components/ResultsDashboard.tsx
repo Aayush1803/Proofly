@@ -206,7 +206,7 @@ export default function ResultsDashboard({ result, onReset }: ResultsDashboardPr
         className="mt-8 text-center text-xs"
         style={{ color: 'var(--text-muted)' }}
       >
-        Analysis powered by <span className="text-[#4F8EFF]">mitra-v2.1.0-multimodal</span> · Results are AI-generated and should be independently verified · Not legal advice
+        Analysis powered by <span className="text-[#4F8EFF]">proofly-v2.1.0-multimodal</span> · Results are AI-generated and should be independently verified · Not legal advice
       </motion.div>
     </div>
   );

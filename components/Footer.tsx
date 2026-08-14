@@ -33,7 +33,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="font-bold text-base" style={{ color: 'var(--text-primary)' }}>
-                Mitra<span className="text-[#4F8EFF]">AI</span>
+                Proofly<span className="text-[#4F8EFF]"> AI</span>
               </span>
               <div className="live-dot" title="Live service" />
             </div>
@@ -71,7 +71,7 @@ export default function Footer() {
             <Heart className="w-3 h-3 text-red-400" />
             <span>by Aayush Joshi ·</span>
             <a
-              href="https://github.com/Aayush1803/MitraAi"
+              href="https://github.com/Aayush1803/Proofly"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 hover:text-white transition-colors"
@@ -80,7 +80,7 @@ export default function Footer() {
               Open Source
             </a>
           </div>
-          <span>© {new Date().getFullYear()} Mitra AI</span>
+          <span>© {new Date().getFullYear()} Proofly</span>
         </div>
       </div>
     </motion.footer>

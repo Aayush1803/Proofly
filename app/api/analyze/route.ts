@@ -173,7 +173,7 @@ function mapResult(
     : '✅ This message has been independently verified as accurate.';
 
   return {
-    id:            `mitra-${Date.now()}`,
+    id:            `proofly-${Date.now()}`,
     timestamp:     new Date().toISOString(),
     inputType:     'text',
     language:      'en',
@@ -197,7 +197,7 @@ function mapResult(
     contextAnalysis: { regional, cultural, sensitivity },
     counterMessage: {
       text:          counterText,
-      whatsappText:  `*🔍 MITRA AI FACT CHECK*\n\nVerdict: *${statusTag}*\n\n${statusLine}\n\n${counterText}\n\n🔗 Verified by Mitra AI\n\n_#FactCheck #StopMisinformation #MitraAI_`,
+      whatsappText:  `*🔍 PROOFLY FACT CHECK*\n\nVerdict: *${statusTag}*\n\n${statusLine}\n\n${counterText}\n\n🔗 Verified by PROOFLY\n\n_#FactCheck #StopMisinformation #Proofly_`,
     },
     processingTime,
     modelVersion: 'gemini-2.0-flash',
@@ -217,12 +217,12 @@ export async function POST(req: NextRequest) {
     }
 
     console.log(`\n${'='.repeat(60)}`);
-    console.log(`[Mitra] Analyzing: "${userInput.slice(0, 100)}"`);
+    console.log(`[Proofly] Analyzing: "${userInput.slice(0, 100)}"`);
 
     // ── Check API key ──────────────────────────────────────────────────────────
     const apiKey = (process.env.GEMINI_API_KEY ?? '').trim();
     if (!apiKey) {
-      console.error('[Mitra] GEMINI_API_KEY is not set in .env.local');
+      console.error('[Proofly] GEMINI_API_KEY is not set in .env.local');
       return NextResponse.json(
         { error: 'AI service not configured. Set GEMINI_API_KEY in .env.local' },
         { status: 503 },
@@ -248,7 +248,7 @@ export async function POST(req: NextRequest) {
       const timeout = setTimeout(() => controller.abort(), 30_000);
 
       try {
-        console.log(`[Mitra] Calling ${model}...`);
+        console.log(`[Proofly] Calling ${model}...`);
         const res = await fetch(geminiUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -268,7 +268,7 @@ export async function POST(req: NextRequest) {
 
         if (res.status === 429 || res.status === 503) {
           lastError = `Error ${res.status} on ${model}`;
-          console.warn(`[Mitra] ${res.status} hit on ${model}, trying next model...`);
+          console.warn(`[Proofly] ${res.status} hit on ${model}, trying next model...`);
           continue; // try next model
         }
 
@@ -276,14 +276,14 @@ export async function POST(req: NextRequest) {
         break; // got a non-429 response
       } catch (e) {
         lastError = (e as Error).message;
-        console.warn(`[Mitra] ${model} failed:`, lastError);
+        console.warn(`[Proofly] ${model} failed:`, lastError);
       } finally {
         clearTimeout(timeout);
       }
     }
 
     if (!geminiResponse) {
-      console.error('[Mitra] All models failed:', lastError);
+      console.error('[Proofly] All models failed:', lastError);
       return NextResponse.json(
         { error: `Gemini API unavailable: ${lastError}. This is usually a rate limit — wait 60s and try again.` },
         { status: 429 },
@@ -293,7 +293,7 @@ export async function POST(req: NextRequest) {
     // ── Check non-ok after model loop ──────────────────────────────────────────
     if (!geminiResponse.ok) {
       const errBody = await geminiResponse.text();
-      console.error('[Mitra] Gemini error:', geminiResponse.status, errBody.slice(0, 300));
+      console.error('[Proofly] Gemini error:', geminiResponse.status, errBody.slice(0, 300));
       if (geminiResponse.status === 503) {
         return NextResponse.json({ error: "Google's AI service is currently overloaded. Please try again in a few moments." }, { status: 503 });
       }
@@ -310,7 +310,7 @@ export async function POST(req: NextRequest) {
     };
 
     if (geminiData.error) {
-      console.error('[Mitra] Gemini API error:', geminiData.error.message);
+      console.error('[Proofly] Gemini API error:', geminiData.error.message);
       return NextResponse.json({ error: `Gemini: ${geminiData.error.message}` }, { status: 502 });
     }
 
@@ -318,7 +318,7 @@ export async function POST(req: NextRequest) {
       geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
     ).trim();
 
-    console.log(`[Mitra] Gemini raw output (${rawText.length} chars):`);
+    console.log(`[Proofly] Gemini raw output (${rawText.length} chars):`);
     console.log(rawText.slice(0, 500));
 
     if (!rawText) {
@@ -330,7 +330,7 @@ export async function POST(req: NextRequest) {
     try {
       parsed = parseGeminiJSON(rawText);
     } catch (e) {
-      console.error('[Mitra] JSON parse failed:', (e as Error).message);
+      console.error('[Proofly] JSON parse failed:', (e as Error).message);
       return NextResponse.json(
         { error: 'AI returned invalid JSON. Try again.', raw: rawText.slice(0, 500) },
         { status: 502 },
@@ -339,13 +339,13 @@ export async function POST(req: NextRequest) {
 
     // ── Map and return ─────────────────────────────────────────────────────────
     const result = mapResult(parsed, userInput, Date.now() - start);
-    console.log(`[Mitra] ✅ Success — trust_score=${result.trustScore}, claims=${result.claims.length}`);
+    console.log(`[Proofly] ✅ Success — trust_score=${result.trustScore}, claims=${result.claims.length}`);
     console.log('='.repeat(60));
 
     return NextResponse.json(result);
 
   } catch (err) {
-    console.error('[Mitra] Unexpected error:', err);
+    console.error('[Proofly] Unexpected error:', err);
     return NextResponse.json(
       { error: err instanceof Error ? err.message : 'Unknown error' },
       { status: 500 },

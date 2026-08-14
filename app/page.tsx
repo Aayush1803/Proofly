@@ -127,7 +127,7 @@ function HomeInner() {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#4F8EFF] to-[#7C3AED] flex items-center justify-center shadow-lg shadow-blue-900/30">
               <Shield className="w-5 h-5 text-white" />
             </div>
-            <span className="text-white font-bold text-xl tracking-tight">Mitra <span className="text-[#4F8EFF]">AI</span></span>
+            <span className="text-white font-bold text-xl tracking-tight">Proofly <span className="text-[#4F8EFF]">AI</span></span>
           </div>
         </div>
 
@@ -190,7 +190,7 @@ function HomeInner() {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#4F8EFF] to-[#7C3AED] flex items-center justify-center">
               <Shield className="w-4 h-4 text-white" />
             </div>
-            <span className="text-white font-bold text-lg">Mitra <span className="text-[#4F8EFF]">AI</span></span>
+            <span className="text-white font-bold text-lg">Proofly <span className="text-[#4F8EFF]">AI</span></span>
           </div>
 
           {/* Mode toggle */}
@@ -411,7 +411,7 @@ function HomeInner() {
               )}
 
               <p className="text-xs text-[#4A4A60] text-center mt-6">
-                Learn more about Mitra AI —{' '}
+                Learn more about Proofly —{' '}
                 <Link href="/how-it-works" className="text-[#4F8EFF] hover:text-[#6BA3FF]">How it works</Link>
                 {' · '}
                 <Link href="/about" className="text-[#4F8EFF] hover:text-[#6BA3FF]">About</Link>

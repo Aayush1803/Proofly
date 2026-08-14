@@ -15,7 +15,7 @@ const STEPS = [
     icon: <FileText className="w-6 h-6" />,
     title: 'Input Collection',
     subtitle: 'Text, URL, or Media',
-    desc: 'Submit any content you want to verify — a WhatsApp forward, a news article URL, social media post, or even a video/image. Mitra accepts all three input types and auto-detects your preferred language.',
+    desc: 'Submit any content you want to verify — a WhatsApp forward, a news article URL, social media post, or even a video/image. Proofly accepts all three input types and auto-detects your preferred language.',
     color: '#4F8EFF',
     tags: ['Text', 'URL', 'Media'],
   },
@@ -78,7 +78,7 @@ const STEPS = [
     icon: <MessageSquare className="w-6 h-6" />,
     title: 'Counter-Message',
     subtitle: 'One-click WhatsApp reply',
-    desc: 'Mitra generates a ready-to-share counter-message in English, Hindi, Tamil, or your detected language that you can paste directly into WhatsApp or social media to correct the misinformation in your network.',
+    desc: 'Proofly generates a ready-to-share counter-message in English, Hindi, Tamil, or your detected language that you can paste directly into WhatsApp or social media to correct the misinformation in your network.',
     color: '#22D3EE',
     tags: ['WhatsApp ready', 'Multilingual'],
   },
@@ -103,7 +103,7 @@ const INPUT_TYPES = [
   {
     icon: '🔗',
     title: 'URL',
-    desc: 'Share a link and Mitra will fetch, read, and analyze the article or webpage content automatically. Even works on YouTube videos by extracting transcripts!',
+    desc: 'Share a link and Proofly will fetch, read, and analyze the article or webpage content automatically. Even works on YouTube videos by extracting transcripts!',
     example: 'https://youtube.com/watch?v=viral-video',
   },
   {
@@ -116,24 +116,24 @@ const INPUT_TYPES = [
 
 const FAQS = [
   {
-    q: 'Is Mitra AI free to use?',
+    q: 'Is Proofly free to use?',
     a: 'Yes. The core fact-checking tool is completely free. We believe access to truth should not be paywalled.',
   },
   {
-    q: 'How accurate is Mitra AI?',
-    a: 'Mitra is powered by Google Gemini 2.5 Flash, an advanced multimodal reasoning engine. While highly sophisticated at detecting manipulation and extracting claims, AI can hallucinate. Always verify critical claims with a real fact-checker like Alt News, BOOM Live, or Reuters.',
+    q: 'How accurate is Proofly?',
+    a: 'Proofly is powered by Google Gemini 2.5 Flash, an advanced multimodal reasoning engine. While highly sophisticated at detecting manipulation and extracting claims, AI can hallucinate. Always verify critical claims with a real fact-checker like Alt News, BOOM Live, or Reuters.',
   },
   {
-    q: 'Does Mitra store my content?',
+    q: 'Does Proofly store my content?',
     a: 'We do not share your submitted content with third parties. Analysis history is stored only securely in our Neon Serverless Database for your reference within your profile.',
   },
   {
-    q: 'Which languages does Mitra support?',
-    a: 'Mitra supports all 23 official Indian languages listed in the 8th Schedule of the Constitution — including Hindi, English, Bengali, Telugu, Marathi, Tamil, Urdu, Gujarati, Kannada, Malayalam, Odia, Punjabi, Assamese, Maithili, Sanskrit, Kashmiri, Nepali, Sindhi, Konkani, Dogri, Manipuri, Bodo, and Santali. Code-mixed variants like Hinglish and Tanglish are also handled.',
+    q: 'Which languages does Proofly support?',
+    a: 'Proofly supports all 23 official Indian languages listed in the 8th Schedule of the Constitution — including Hindi, English, Bengali, Telugu, Marathi, Tamil, Urdu, Gujarati, Kannada, Malayalam, Odia, Punjabi, Assamese, Maithili, Sanskrit, Kashmiri, Nepali, Sindhi, Konkani, Dogri, Manipuri, Bodo, and Santali. Code-mixed variants like Hinglish and Tanglish are also handled.',
   },
   {
-    q: 'Can I use Mitra for journalism?',
-    a: 'Absolutely. Mitra is designed to assist journalists and researchers. We offer API access for newsrooms — contact us for details.',
+    q: 'Can I use Proofly for journalism?',
+    a: 'Absolutely. Proofly is designed to assist journalists and researchers. We offer API access for newsrooms — contact us for details.',
   },
 ];
 
@@ -172,7 +172,7 @@ export default function HowItWorksPage() {
             </h1>
 
             <p className="text-xl text-[#8A8AA0] leading-relaxed max-w-2xl mx-auto">
-              Every piece of content goes through Mitra&apos;s full AI pipeline — from ingestion to a
+              Every piece of content goes through Proofly&apos;s full AI pipeline — from ingestion to a
               shareable counter-message — in under 5 seconds.
             </p>
           </motion.div>
@@ -219,7 +219,7 @@ export default function HowItWorksPage() {
           className="mb-10"
         >
           <h2 className="text-2xl font-black text-white mb-2">The 9-step pipeline</h2>
-          <p className="text-[#8A8AA0]">How Mitra AI processes every piece of content.</p>
+          <p className="text-[#8A8AA0]">How Proofly processes every piece of content.</p>
         </motion.div>
 
         <div className="space-y-4">

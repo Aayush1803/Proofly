@@ -15,7 +15,7 @@ interface ErrorProps {
 export default function AnalyzeError({ error, reset }: ErrorProps) {
   useEffect(() => {
     // Log to an error tracking service in production
-    console.error('[Mitra AI] /analyze error boundary caught:', error);
+    console.error('[Proofly] /analyze error boundary caught:', error);
   }, [error]);
 
   return (

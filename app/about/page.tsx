@@ -10,7 +10,7 @@ const TEAM = [
   {
     name: 'Aayush Joshi',
     role: 'Founder, Lead Architect & Full-Stack Engineer',
-    bio: 'The technical mastermind behind Mitra AI. Aayush architected, developed, and deployed the entire platform from the ground up. He single-handedly designed the Next.js serverless architecture, orchestrated the Neon Postgres database, integrated the Google Gemini 2.5 Flash multimodal engine, and crafted the premium glassmorphic UI/UX. His vision drives the technical execution and aggressive scaling strategy of Mitra.',
+    bio: 'The technical mastermind behind Proofly. Aayush architected, developed, and deployed the entire platform from the ground up. He single-handedly designed the Next.js serverless architecture, orchestrated the Neon Postgres database, integrated the Google Gemini 2.5 Flash multimodal engine, and crafted the premium glassmorphic UI/UX. His vision drives the technical execution and aggressive scaling strategy of Proofly.',
     avatar: 'AJ',
     color: '#4F8EFF',
     github: 'https://github.com/Aayush1803',
@@ -20,7 +20,7 @@ const TEAM = [
   {
     name: 'Ayushmaan Srivastava',
     role: 'Co-Founder & Chief Operations Officer',
-    bio: 'The strategic pillar of the Mitra team. Ayushmaan directed the operational framework, provided critical moral support during intensive development sprints, and helped shape the core product philosophy. His deep understanding of the Indian digital landscape was crucial in defining Mitra\'s mission to tackle regional misinformation across 23 languages.',
+    bio: 'The strategic pillar of the Proofly team. Ayushmaan directed the operational framework, provided critical moral support during intensive development sprints, and helped shape the core product philosophy. His deep understanding of the Indian digital landscape was crucial in defining Proofly\'s mission to tackle regional misinformation across 23 languages.',
     avatar: 'AS',
     color: '#22D3EE',
     github: 'https://github.com/Ayushmaan124-cpu',
@@ -30,7 +30,7 @@ const TEAM = [
   {
     name: 'Aditya Rauniyar',
     role: 'Co-Founder & Lead Presenter',
-    bio: 'The voice and visual storyteller of Mitra AI. Aditya crafted the comprehensive pitch decks, visual presentation materials, and strategic marketing narratives. His ability to distill complex serverless architectures and multimodal AI concepts into compelling, easy-to-understand stories is instrumental in introducing Mitra to investors, hackathon judges, and the public.',
+    bio: 'The voice and visual storyteller of Proofly. Aditya crafted the comprehensive pitch decks, visual presentation materials, and strategic marketing narratives. His ability to distill complex serverless architectures and multimodal AI concepts into compelling, easy-to-understand stories is instrumental in introducing Proofly to investors, hackathon judges, and the public.',
     avatar: 'AR',
     color: '#7C3AED',
     github: 'https://github.com/aditya22-ops',
@@ -40,7 +40,7 @@ const TEAM = [
 ];
 
 const MILESTONES = [
-  { year: '2026', title: 'Hackathon Project', desc: 'Mitra AI was built as a hackathon/demo project to explore how AI can help combat misinformation in Indian digital spaces.' },
+  { year: '2026', title: 'Hackathon Project', desc: 'Proofly was built as a hackathon/demo project to explore how AI can help combat misinformation in Indian digital spaces.' },
   { year: '2026', title: 'v2 Multimodal', desc: 'Added multilingual support (English, Hindi, Tamil), virality risk scoring, regional context analysis, and a 9-step analysis pipeline.' },
   { year: 'Now', title: 'Open & Growing', desc: 'Actively being developed with plans to add more Indian languages, real fact-checker API integrations, and a public API.' },
 ];
@@ -95,7 +95,7 @@ export default function AboutPage() {
             </h1>
 
             <p className="text-xl text-[#8A8AA0] leading-relaxed max-w-2xl mx-auto">
-              Mitra AI was built to give every Indian — regardless of language or tech literacy —
+              Proofly was built to give every Indian — regardless of language or tech literacy —
               a powerful tool to verify claims before sharing them. Because truth matters.
             </p>
           </motion.div>
