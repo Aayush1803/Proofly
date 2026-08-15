@@ -164,6 +164,41 @@ body {
     0 0 40px rgba(79,142,255,0.06);
 }
 
+/* ─── SECTION CARD (analysis result cards) ───────────────────── */
+.section-card {
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+              border-color 0.3s ease,
+              box-shadow 0.4s ease;
+  cursor: default;
+  will-change: transform;
+}
+.section-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(79, 142, 255, 0.22) !important;
+  box-shadow:
+    0 16px 48px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 0 0 1px rgba(79,142,255,0.08);
+}
+
+/* ─── SHIMMER BUTTON ─────────────────────────────────────────── */
+.shimmer-btn {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.06) 50%, transparent 60%);
+  background-size: 200% 100%;
+  animation: shimmer-sweep 2.5s linear infinite;
+}
+@keyframes shimmer-sweep {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
 /* ─── INTERACTIVE CARD (clickable) ──────────────────────────── */
 .card-interactive {
   transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);

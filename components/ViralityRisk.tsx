@@ -137,8 +137,8 @@ export default function ViralityRisk({ data }: ViralityRiskProps) {
           {/* Spread indicators */}
           <div className="grid grid-cols-2 gap-2">
             {[
-              { label: 'WhatsApp Groups', value: data.score > 60 ? 'Very Likely' : data.score > 30 ? 'Possible' : 'Unlikely', hot: data.score > 60 },
-              { label: 'Twitter/X', value: data.score > 70 ? 'Trending Risk' : data.score > 40 ? 'Moderate' : 'Low', hot: data.score > 70 },
+              { label: 'Messaging Apps', value: data.score > 60 ? 'Very Likely' : data.score > 30 ? 'Possible' : 'Unlikely', hot: data.score > 60 },
+              { label: 'Social Media', value: data.score > 70 ? 'Trending Risk' : data.score > 40 ? 'Moderate' : 'Low', hot: data.score > 70 },
             ].map(indicator => (
               <div key={indicator.label} className="p-2.5 rounded-lg" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--bg-border)' }}>
                 <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{indicator.label}</p>
