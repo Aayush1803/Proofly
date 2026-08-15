@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Zap, ChevronDown, LogOut, User, BarChart3, Sun, Moon, Menu, X } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
@@ -25,11 +25,12 @@ export default function NavBar() {
   const mobileRef = useRef<HTMLDivElement>(null);
 
   // Scroll-driven opacity / blur enhancement
-  const { scrollY } = useScroll();
+  const { scrollY, scrollYProgress } = useScroll();
   const navShadow = useTransform(scrollY, [0, 80], [
     '0 4px 16px rgba(0,0,0,0.10)',
     '0 8px 40px rgba(0,0,0,0.28)',
   ]);
+  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -47,12 +48,23 @@ export default function NavBar() {
     : '?';
 
   return (
-    <motion.div
-      className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4 pointer-events-none"
-      initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0,   opacity: 1 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-    >
+    <>
+      {/* Scroll progress bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 z-[60] h-[2px] origin-left pointer-events-none"
+        style={{
+          scaleX,
+          background: 'linear-gradient(90deg, #4F8EFF, #7C3AED, #22D3EE)',
+          boxShadow: '0 0 8px rgba(79,142,255,0.6)',
+        }}
+      />
+
+      <motion.div
+        className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4 pointer-events-none"
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0,   opacity: 1 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      >
       <motion.nav
         style={{ boxShadow: navShadow }}
         className="floating-nav pointer-events-auto w-full max-w-5xl rounded-2xl px-4 h-14 flex items-center justify-between"
@@ -323,6 +335,7 @@ export default function NavBar() {
           </div>
         </div>
       </motion.nav>
-    </motion.div>
+      </motion.div>
+    </>
   );
 }

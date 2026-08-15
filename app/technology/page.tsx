@@ -1,300 +1,340 @@
 'use client';
 
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Zap, Cpu, Database, Lock, Globe, Server, Layers, Code, GitMerge, Fingerprint } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Zap, Cpu, Database, Lock, Globe, Server, Layers, Shield, CheckCircle } from 'lucide-react';
 import NavBar from '@/components/NavBar';
 import Footer from '@/components/Footer';
 
 const TECH_PILLARS = [
   {
     icon: Cpu,
-    title: 'Native Multimodal AI Engine',
+    title: 'Gemini 2.5 Flash AI Engine',
     color: '#4F8EFF',
-    desc: 'At the heart of Proofly lies Google Gemini 2.5 Flash. We bypass fragmented OCR or transcription pipelines, streaming Base64-encoded media directly to the model for holistic, unified reasoning.',
-    details: [
-      'Zero-loss Base64 multimodal streaming',
-      'Native handling of MP4, MP3, JPEG, PDF',
-      'Simultaneous analysis of visual manipulation and spoken claims',
-    ],
+    size: 'lg', // wider card
+    desc: 'At the heart of Proofly lies Google Gemini 2.5 Flash, accessed via the GenerativeLanguage API. We stream Base64-encoded images, video, audio, and documents directly to Gemini — native multimodal capability that evaluates visual context, spoken tone, and on-screen text holistically.',
+    details: ['Direct Base64 multimodal streaming', 'Native MP4, MP3, JPEG, PDF support', 'Simultaneous visual + audio analysis', 'Sub-5s reasoning for complex content'],
   },
   {
     icon: Globe,
-    title: '23-Language NLP & Context',
+    title: '23-Language NLP',
     color: '#22D3EE',
-    desc: 'Misinformation thrives in regional echo chambers. Proofly possesses deep linguistic intelligence to automatically detect, parse, and analyze all 23 official Indian languages and code-mixed colloquialisms.',
-    details: [
-      'Support for Hindi, Bengali, Tamil, Telugu, Marathi, etc.',
-      'Handles complex scripts: Devanagari, Latin, regional graphemes',
-      'Sentiment-aware detection of culturally sensitive keywords',
-    ],
+    size: 'sm',
+    desc: 'Detects and parses all 23 official Indian languages including code-mixed Hinglish and Tanglish without losing factual fidelity.',
+    details: ['Hindi, Bengali, Tamil, Telugu...', 'Devanagari & regional scripts', 'Sentiment-aware detection'],
   },
   {
     icon: Server,
-    title: 'Edge Serverless Execution',
+    title: 'Netlify Edge Serverless',
     color: '#7C3AED',
-    desc: 'Proofly operates on a highly optimized Next.js 14 App Router architecture deployed exclusively on Netlify. Transitioning to Edge Serverless Functions provided unparalleled horizontal scaling.',
-    details: [
-      'Optimized serverless deployment for global edge routing',
-      'Extended serverless timeouts (60s) for heavy media',
-      'Eliminated monolithic bottlenecks of container systems',
-    ],
+    size: 'sm',
+    desc: 'Optimized Next.js 14 App Router on Netlify Edge Serverless Functions — horizontal scaling with minimal cold-boot latency.',
+    details: ['Global edge routing', 'Extended 60s timeouts for media', 'No monolithic bottlenecks'],
   },
   {
     icon: Database,
-    title: 'Neon Serverless Postgres',
+    title: 'Neon Postgres + Prisma ORM',
     color: '#F59E0B',
-    desc: 'By decoupling storage and compute, Neon allows our database to instantly scale to zero and dynamically allocate resources based on traffic spikes, managed entirely through Prisma ORM.',
-    details: [
-      'Neon.tech Serverless PostgreSQL architecture',
-      'Prisma ORM for strict end-to-end type safety',
-      'Instant auto-scaling and connection pooling at the edge',
-    ],
+    size: 'sm',
+    desc: 'Neon Serverless Postgres scales to zero and allocates resources dynamically. Prisma ORM enforces strict TypeScript safety.',
+    details: ['Instant auto-scaling', 'End-to-end type safety', 'Secure connection pooling'],
   },
   {
     icon: Layers,
-    title: 'Intelligent Scraping',
+    title: 'Cheerio Web Scraper',
     color: '#EF4444',
-    desc: 'Proofly employs a custom-built, highly aggressive web scraper using Cheerio and the Node.js Fetch API. It strips away digital noise using 15+ semantic HTML fallback selectors.',
-    details: [
-      'Cheerio-powered semantic HTML noise removal',
-      'YouTube TimedText XML caption metadata extraction',
-      'Simulated User-Agent rotation to bypass bot screens',
-    ],
+    size: 'sm',
+    desc: 'Custom Cheerio scraper strips digital noise using 15+ semantic HTML selectors. YouTube captions extracted via TimedText XML API.',
+    details: ['Semantic HTML fallbacks', 'YouTube caption extraction', 'User-Agent rotation'],
   },
   {
     icon: Lock,
-    title: 'Enterprise-Grade Security',
+    title: 'NextAuth Security',
     color: '#22C55E',
-    desc: 'Identity and session management are governed by NextAuth.js. We provide seamless Google SSO integration alongside a highly secure Credentials provider with bcrypt hashing (Cost Factor 12).',
-    details: [
-      'NextAuth.js stateful/stateless session management',
-      'Google Cloud Console OAuth2 seamless SSO',
-      'Strict environment variable protection across pipeline',
-    ],
+    size: 'lg',
+    desc: 'Identity governed by NextAuth.js — Google OAuth2 SSO and secure Credentials provider. Passwords hashed with bcrypt (Cost Factor 12) for complete brute-force protection.',
+    details: ['Google OAuth2 SSO', 'bcrypt CF-12 hashing', 'Environment variable protection', 'Stateful session lifecycle'],
   },
 ];
 
-const STACK = [
-  { category: 'Frontend Layer', items: ['Next.js 14 (App Router)', 'React 18', 'TypeScript 5', 'Tailwind CSS v4', 'Framer Motion v10'] },
-  { category: 'Backend Orchestration', items: ['Next.js Serverless APIs', 'NextAuth.js (Auth.js)', 'Cheerio Web Scraper', 'Node.js native Fetch'] },
-  { category: 'Database & Data', items: ['Neon Serverless Postgres', 'Prisma ORM', 'Prisma Connection Pooling', 'bcryptjs Cryptography'] },
-  { category: 'AI & Cloud Infra', items: ['Google Gemini API (2.5)', 'Netlify Edge Deployment', 'Railway (Prototyping)', 'YouTube Caption XML API'] },
+const STACK_BADGES = [
+  { label: 'Next.js 14', color: '#4F8EFF' },
+  { label: 'React 18',   color: '#22D3EE' },
+  { label: 'TypeScript 5', color: '#7C3AED' },
+  { label: 'Tailwind CSS v4', color: '#F59E0B' },
+  { label: 'Framer Motion', color: '#EF4444' },
+  { label: 'Gemini 2.5 Flash', color: '#4F8EFF' },
+  { label: 'Neon Postgres', color: '#22C55E' },
+  { label: 'Prisma ORM', color: '#7C3AED' },
+  { label: 'NextAuth.js', color: '#22D3EE' },
+  { label: 'Cheerio', color: '#F59E0B' },
+  { label: 'Netlify Edge', color: '#EF4444' },
+  { label: 'bcryptjs', color: '#22C55E' },
+];
+
+const PERF = [
+  { label: 'Avg. response', value: '<5s',  sub: 'Full 9-step pipeline',       color: '#4F8EFF' },
+  { label: 'Languages',      value: '23',   sub: 'Official Indian languages',   color: '#22D3EE' },
+  { label: 'Input types',    value: '5+',   sub: 'Text · URL · Image · Audio',  color: '#7C3AED' },
+  { label: 'Uptime',         value: '99%',  sub: 'Netlify Edge SLA',            color: '#22C55E' },
+];
+
+const FLOW_NODES = [
+  { label: 'Input\n(Text/URL/Media)',  color: '#4F8EFF' },
+  { label: 'Netlify\nEdge API',        color: '#7C3AED' },
+  { label: 'Cheerio\nScraper',         color: '#F59E0B' },
+  { label: 'Gemini 2.5\nFlash',        color: '#22D3EE' },
+  { label: 'Streamed\nReport',          color: '#22C55E' },
 ];
 
 export default function TechnologyPage() {
   return (
-    <main className="min-h-screen pb-0" style={{ background: 'var(--bg-primary)' }}>
+    <main className="min-h-screen pb-24" style={{ background: 'var(--bg-primary)' }}>
       <NavBar />
 
-      {/* ── HERO ──────────────────────────────────────────────── */}
-      <section className="relative pt-32 pb-24 px-4 overflow-hidden">
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(160deg, #0A0A0F 0%, #0D0D1F 50%, #0A0D1A 100%)' }} />
-        
-        {/* Animated grid mesh */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)',
-            backgroundSize: '40px 40px',
-            transform: 'perspective(1000px) rotateX(60deg) scale(2.5) translateY(-50%)',
-            transformOrigin: 'top center',
-          }}
-        />
+      {/* ── HERO ────────────────────────────────────────────────── */}
+      <section className="relative pt-32 pb-28 px-4 overflow-hidden">
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(160deg, #0D0D1F 0%, #0A0A0F 50%, #0D0A1A 100%)' }} />
 
-        <motion.div
-          className="absolute top-0 right-1/4 w-[600px] h-[500px] rounded-full pointer-events-none"
+        {/* Circuit-grid overlay */}
+        <div className="absolute inset-0 opacity-[0.025] pointer-events-none"
+          style={{ backgroundImage: 'linear-gradient(rgba(124,58,237,1) 1px, transparent 1px), linear-gradient(90deg, rgba(124,58,237,1) 1px, transparent 1px)', backgroundSize: '48px 48px' }} />
+
+        {/* Glow blobs */}
+        <motion.div className="absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full pointer-events-none"
           style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%)', filter: 'blur(80px)' }}
-          animate={{ scale: [1, 1.2, 1], opacity: [0.6, 1, 0.6] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        />
+          animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 8, repeat: Infinity }} />
+        <motion.div className="absolute bottom-0 left-1/4 w-96 h-96 rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(79,142,255,0.10) 0%, transparent 70%)', filter: 'blur(60px)' }}
+          animate={{ scale: [1.1, 1, 1.1] }} transition={{ duration: 10, repeat: Infinity }} />
 
         <div className="relative max-w-5xl mx-auto text-center">
-          <motion.div initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.4 }}>
-            <Link href="/" className="inline-flex items-center gap-2 text-sm mb-10 px-4 py-2 rounded-xl transition-all duration-200 group" style={{ color: 'var(--text-muted)', border: '1px solid var(--bg-border)', background: 'var(--bg-secondary)' }}
+          <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.4 }}>
+            <Link href="/" className="inline-flex items-center gap-2 text-sm mb-10 px-4 py-2 rounded-xl transition-all duration-200"
+              style={{ color: 'var(--text-muted)', border: '1px solid var(--bg-border)', background: 'var(--bg-secondary)' }}
               onMouseEnter={e => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.borderColor = 'rgba(124,58,237,0.4)'; }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.borderColor = 'var(--bg-border)'; }}
-            >
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-              Back to home
+              onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.borderColor = 'var(--bg-border)'; }}>
+              <ArrowLeft className="w-4 h-4" /> Back to home
             </Link>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.1 }}
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }}
             className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full"
-            style={{ background: 'linear-gradient(135deg, rgba(124,58,237,0.15), rgba(79,142,255,0.15))', border: '1px solid rgba(124,58,237,0.3)', boxShadow: '0 0 24px rgba(124,58,237,0.12)' }}
-          >
+            style={{ background: 'linear-gradient(135deg, rgba(124,58,237,0.15), rgba(79,142,255,0.15))', border: '1px solid rgba(124,58,237,0.35)', boxShadow: '0 0 24px rgba(124,58,237,0.12)' }}>
             <Cpu className="w-3.5 h-3.5 text-[#7C3AED]" />
-            <span className="text-xs font-bold tracking-widest uppercase text-[#7C3AED]">Architectural Deep Dive</span>
+            <span className="text-xs font-bold tracking-widest uppercase text-[#7C3AED]">Architecture Deep Dive</span>
           </motion.div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             className="display-font font-black leading-[1.05] mb-6"
-            style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', color: 'var(--text-primary)' }}
-          >
-            Engineered for <span className="gradient-text">scale</span><br />and precision.
+            style={{ fontSize: 'clamp(2.8rem, 7vw, 5rem)', color: 'var(--text-primary)' }}>
+            Engineered for{' '}
+            <span className="gradient-text">extreme scale</span>
+            <br />
+            <span style={{ color: 'var(--text-secondary)' }}>and precision.</span>
           </motion.h1>
 
-          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.35 }}
+          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
             className="text-lg leading-relaxed max-w-3xl mx-auto"
-            style={{ color: 'var(--text-secondary)' }}
-          >
-            By combining serverless primitives across Netlify and Neon with the bleeding-edge reasoning capabilities of Google Gemini 2.5, we have constructed an infrastructure capable of combating misinformation in real-time.
+            style={{ color: 'var(--text-secondary)' }}>
+            Proofly combines serverless primitives across Netlify and Neon with the bleeding-edge reasoning of Google Gemini 2.5 — infrastructure built to fight misinformation in real-time.
           </motion.p>
         </div>
       </section>
 
-      {/* ── STATS TICKER ───────────────────────────────────────── */}
-      <div className="w-full border-y overflow-hidden flex whitespace-nowrap bg-black/40 py-4" style={{ borderColor: 'var(--bg-border)' }}>
-        <motion.div
-          className="flex items-center gap-16"
-          animate={{ x: ['0%', '-50%'] }}
-          transition={{ ease: 'linear', duration: 25, repeat: Infinity }}
-        >
-          {Array(4).fill(null).flatMap((_, i) => [
-            <span key={`t1-${i}`} className="text-[#8A8AA0] font-mono text-sm tracking-widest uppercase"><span className="text-[#4F8EFF] mr-2">AVG RES:</span> {'<5s'} E2E</span>,
-            <span key={`t2-${i}`} className="text-[#8A8AA0] font-mono text-sm tracking-widest uppercase"><span className="text-[#22D3EE] mr-2">LANGUAGES:</span> 23 NATIVE</span>,
-            <span key={`t3-${i}`} className="text-[#8A8AA0] font-mono text-sm tracking-widest uppercase"><span className="text-[#7C3AED] mr-2">DB:</span> SERVERLESS POSTGRES</span>,
-            <span key={`t4-${i}`} className="text-[#8A8AA0] font-mono text-sm tracking-widest uppercase"><span className="text-[#F59E0B] mr-2">INPUT:</span> MULTIMODAL</span>,
-          ])}
-        </motion.div>
-      </div>
+      {/* ── PERF STATS ──────────────────────────────────────────── */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {PERF.map((p, i) => (
+            <motion.div key={p.label}
+              initial={{ opacity: 0, y: 24, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -5 }}
+              className="relative flex flex-col items-center text-center p-6 rounded-2xl overflow-hidden"
+              style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(18px)', border: `1px solid ${p.color}22`, boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}>
+              <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full pointer-events-none"
+                style={{ background: `${p.color}12`, filter: 'blur(20px)' }} />
+              <div className="display-font font-black leading-none mb-2" style={{ color: p.color, fontSize: 'clamp(2rem, 4vw, 2.8rem)' }}>{p.value}</div>
+              <div className="text-xs font-bold mb-1" style={{ color: 'var(--text-primary)' }}>{p.label}</div>
+              <div className="text-[10px] font-mono" style={{ color: 'var(--text-muted)' }}>{p.sub}</div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
-      {/* ── TECH PILLARS ──────────────────────────────────────── */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-12 text-center">
-          <h2 className="display-font text-4xl font-black mb-4" style={{ color: 'var(--text-primary)' }}>Core Infrastructure <span className="gradient-text">Pillars</span></h2>
-          <p className="text-lg max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>The foundational systems that enable rapid, highly accurate multimodal analysis without infrastructure bottlenecks.</p>
+      {/* ── BENTO TECH PILLARS ─────────────────────────────────── */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-12">
+          <div className="inline-flex items-center gap-2 mb-4 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest"
+            style={{ background: 'rgba(79,142,255,0.1)', border: '1px solid rgba(79,142,255,0.25)', color: '#4F8EFF' }}>
+            Infrastructure
+          </div>
+          <h2 className="display-font text-3xl font-black mb-2" style={{ color: 'var(--text-primary)' }}>
+            Core <span className="gradient-text">Infrastructure Pillars</span>
+          </h2>
+          <p style={{ color: 'var(--text-secondary)' }}>The foundational systems enabling rapid, accurate multimodal analysis.</p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          {TECH_PILLARS.map((pillar, i) => {
-            const Icon = pillar.icon;
+        {/* Bento grid: lg cards span 2 cols, sm cards span 1 */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {TECH_PILLARS.map((p, i) => {
+            const Icon = p.icon;
+            const isLg = p.size === 'lg';
             return (
-              <motion.div
-                key={pillar.title}
+              <motion.div key={p.title}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ y: -6, transition: { duration: 0.3 } }}
-                className="group relative p-8 rounded-3xl overflow-hidden transition-all duration-300"
-                style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(20px)', border: '1px solid var(--glass-border)', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = `${pillar.color}40`; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--glass-border)'; }}
-              >
-                {/* Glow Halo */}
-                <div className="absolute -top-12 -left-12 w-48 h-48 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: `radial-gradient(circle, ${pillar.color}15 0%, transparent 70%)`, filter: 'blur(20px)' }} />
+                transition={{ delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -4 }}
+                className={`relative rounded-2xl p-6 overflow-hidden group ${isLg ? 'md:col-span-2 lg:col-span-1' : ''}`}
+                style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(18px)', border: `1px solid ${p.color}22`, boxShadow: '0 8px 32px rgba(0,0,0,0.3)', willChange: 'transform' }}>
 
-                <div className="relative z-10">
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-lg transition-transform group-hover:scale-110" style={{ background: `${pillar.color}15`, color: pillar.color, border: `1px solid ${pillar.color}30` }}>
-                    <Icon className="w-6 h-6" />
-                  </div>
-                  <h3 className="font-black text-2xl mb-4 tracking-tight" style={{ color: 'var(--text-primary)' }}>{pillar.title}</h3>
-                  <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>{pillar.desc}</p>
-                  
-                  <ul className="space-y-3">
-                    {pillar.details.map((d, idx) => (
-                      <li key={idx} className="flex items-start gap-3 text-sm font-medium" style={{ color: 'var(--text-muted)' }}>
-                        <div className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0" style={{ background: pillar.color, boxShadow: `0 0 8px ${pillar.color}` }} />
-                        {d}
-                      </li>
-                    ))}
-                  </ul>
+                {/* Top gradient accent */}
+                <div className="absolute top-0 left-0 right-0 h-px"
+                  style={{ background: `linear-gradient(90deg, transparent, ${p.color}80, transparent)` }} />
+
+                {/* Glow on hover */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  style={{ background: `radial-gradient(circle at top left, ${p.color}08 0%, transparent 60%)` }} />
+
+                {/* Icon */}
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
+                  style={{ background: `${p.color}15`, border: `1px solid ${p.color}30`, color: p.color, boxShadow: `0 0 16px ${p.color}10` }}>
+                  <Icon className="w-5 h-5" />
                 </div>
+
+                <h3 className="font-bold text-base mb-3" style={{ color: 'var(--text-primary)' }}>{p.title}</h3>
+                <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--text-secondary)' }}>{p.desc}</p>
+
+                {/* Detail chips */}
+                <ul className="space-y-1.5">
+                  {p.details.map(d => (
+                    <li key={d} className="flex items-center gap-2 text-xs" style={{ color: 'var(--text-muted)' }}>
+                      <CheckCircle className="w-3 h-3 flex-shrink-0" style={{ color: p.color }} />
+                      {d}
+                    </li>
+                  ))}
+                </ul>
               </motion.div>
             );
           })}
         </div>
       </section>
 
-      {/* ── ARCHITECTURE FLOW ─────────────────────────────────── */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="rounded-[40px] p-12 relative overflow-hidden"
-          style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(24px)', border: '1px solid var(--glass-border)', boxShadow: '0 24px 80px rgba(0,0,0,0.3)' }}
-        >
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(79,142,255,0.05) 0%, rgba(124,58,237,0.05) 100%)' }} />
-          
-          <div className="relative z-10">
-            <div className="flex items-center justify-center gap-3 mb-10">
-              <GitMerge className="w-6 h-6 text-[#4F8EFF]" />
-              <h2 className="display-font text-3xl font-black tracking-tight" style={{ color: 'var(--text-primary)' }}>Data Flow & Processing Pipeline</h2>
-            </div>
-            
-            <div className="flex flex-col md:flex-row flex-wrap items-center justify-center gap-4">
-              {[
-                { label: 'Multimodal Input', bg: '#4F8EFF', icon: Fingerprint },
-                { label: '→', bg: 'none', icon: null },
-                { label: 'Netlify Edge API', bg: '#7C3AED', icon: Server },
-                { label: '→', bg: 'none', icon: null },
-                { label: 'Cheerio / Base64', bg: '#F59E0B', icon: Code },
-                { label: '→', bg: 'none', icon: null },
-                { label: 'Gemini 2.5 Flash', bg: '#22D3EE', icon: Cpu },
-                { label: '→', bg: 'none', icon: null },
-                { label: 'Client-Side Stream', bg: '#22C55E', icon: Zap },
-              ].map((node, i) => (
-                node.bg === 'none' ? (
-                  <span key={i} className="text-2xl font-black opacity-30 md:rotate-0 rotate-90" style={{ color: 'var(--text-muted)' }}>→</span>
-                ) : (
-                  <div key={i} className="flex items-center gap-2 px-5 py-3.5 rounded-2xl text-sm font-bold shadow-xl"
-                    style={{ background: `${node.bg}12`, border: `1px solid ${node.bg}40`, color: node.bg, boxShadow: `0 8px 24px ${node.bg}20` }}
-                  >
-                    {node.icon && <node.icon className="w-4 h-4" />}
-                    {node.label}
-                  </div>
-                )
-              ))}
-            </div>
-            
-            <p className="text-center text-xs mt-10 font-mono px-6 py-3 rounded-full mx-auto inline-block border"
-              style={{ background: 'rgba(0,0,0,0.4)', color: 'var(--text-muted)', borderColor: 'var(--bg-border)' }}
-            >
-              Full architectural execution completes securely via stateless Netlify Edge Functions.
-            </p>
+      {/* ── TECH STACK BADGES ────────────────────────────────────── */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
+          <div className="inline-flex items-center gap-2 mb-4 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest"
+            style={{ background: 'rgba(34,211,238,0.1)', border: '1px solid rgba(34,211,238,0.25)', color: '#22D3EE' }}>
+            Tech Stack
           </div>
+          <h2 className="display-font text-3xl font-black" style={{ color: 'var(--text-primary)' }}>The Complete Stack</h2>
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+          className="flex flex-wrap gap-3">
+          {STACK_BADGES.map((b, i) => (
+            <motion.span key={b.label}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.04 }}
+              whileHover={{ y: -2, scale: 1.05 }}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold font-mono cursor-default"
+              style={{ background: `${b.color}12`, border: `1px solid ${b.color}30`, color: b.color }}>
+              <div className="w-1.5 h-1.5 rounded-full" style={{ background: b.color }} />
+              {b.label}
+            </motion.span>
+          ))}
         </motion.div>
       </section>
 
-      {/* ── THE COMPLETE STACK ────────────────────────────────── */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-12 text-center">
-          <h2 className="display-font text-4xl font-black mb-4" style={{ color: 'var(--text-primary)' }}>The Complete <span className="gradient-text">Stack</span></h2>
-        </motion.div>
+      {/* ── DATA FLOW DIAGRAM ─────────────────────────────────────── */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          className="relative rounded-3xl p-10 overflow-hidden"
+          style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(24px)', border: '1px solid var(--glass-border)', boxShadow: '0 24px 80px rgba(0,0,0,0.4)' }}>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {STACK.map((group, i) => (
-            <motion.div
-              key={group.category}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-              className="rounded-3xl p-8 relative overflow-hidden"
-              style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', backdropFilter: 'blur(10px)' }}
-            >
-              <div className="absolute top-0 left-0 w-full h-1 opacity-60" style={{ background: 'linear-gradient(90deg, #4F8EFF, #7C3AED)' }} />
-              <h3 className="text-xs font-black uppercase tracking-widest mb-6 font-mono" style={{ color: '#4F8EFF' }}>
-                {group.category}
-              </h3>
-              <ul className="space-y-4">
-                {group.items.map(item => (
-                  <li key={item} className="flex items-start gap-3 text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-                    <div className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ background: '#7C3AED', boxShadow: '0 0 6px #7C3AED' }} />
-                    {item}
-                  </li>
-                ))}
-              </ul>
+          <div className="absolute inset-0 pointer-events-none"
+            style={{ background: 'linear-gradient(135deg, rgba(79,142,255,0.04), rgba(124,58,237,0.04))' }} />
+
+          <h2 className="display-font text-2xl font-black text-center mb-10" style={{ color: 'var(--text-primary)' }}>
+            Data Flow Pipeline
+          </h2>
+
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {FLOW_NODES.map((node, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.12 }}
+                  whileHover={{ scale: 1.06 }}
+                  className="px-5 py-3 rounded-xl text-center text-xs font-bold font-mono leading-relaxed whitespace-pre"
+                  style={{ background: `${node.color}12`, border: `1px solid ${node.color}40`, color: node.color, boxShadow: `0 4px 16px ${node.color}12` }}>
+                  {node.label}
+                </motion.div>
+                {i < FLOW_NODES.length - 1 && (
+                  <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.12 + 0.06 }}>
+                    <ArrowRight className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
+                  </motion.div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <p className="text-center text-[11px] font-mono mt-8" style={{ color: 'var(--text-muted)' }}>
+            Full execution completes via stateless Netlify Edge Functions · &lt;5s end-to-end
+          </p>
+        </motion.div>
+      </section>
+
+      {/* ── CTA ──────────────────────────────────────────────────── */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          className="relative rounded-3xl p-14 text-center overflow-hidden"
+          style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(24px)', border: '1px solid var(--glass-border)', boxShadow: '0 24px 80px rgba(0,0,0,0.4)' }}>
+          <div className="absolute inset-0 pointer-events-none"
+            style={{ background: 'linear-gradient(135deg, rgba(124,58,237,0.08), rgba(79,142,255,0.08))' }} />
+          <motion.div className="absolute -top-20 -right-20 w-64 h-64 rounded-full pointer-events-none"
+            style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)', filter: 'blur(40px)' }}
+            animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 5, repeat: Infinity }} />
+
+          <div className="relative z-10">
+            <motion.div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
+              style={{ background: 'linear-gradient(135deg, #7C3AED, #4F8EFF)', boxShadow: '0 8px 32px rgba(124,58,237,0.35)' }}
+              animate={{ boxShadow: ['0 8px 32px rgba(124,58,237,0.25)', '0 8px 48px rgba(124,58,237,0.5)', '0 8px 32px rgba(124,58,237,0.25)'] }}
+              transition={{ duration: 3, repeat: Infinity }}>
+              <Shield className="w-8 h-8 text-white" />
             </motion.div>
-          ))}
-        </div>
+
+            <h2 className="display-font text-4xl font-black mb-4" style={{ color: 'var(--text-primary)' }}>
+              Experience the technology <span className="gradient-text">natively</span>
+            </h2>
+            <p className="text-base mb-10 max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              Submit any claim, paste a complex URL, or upload raw media. Watch the serverless Gemini-powered pipeline dissect and analyze it in real time.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/?mode=signup"
+                className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-bold text-white transition-all duration-300 hover:scale-[1.03]"
+                style={{ background: 'linear-gradient(135deg, #7C3AED, #4F8EFF)', boxShadow: '0 4px 24px rgba(124,58,237,0.35)' }}>
+                <Zap className="w-4 h-4" /> Initialize Proofly Engine <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link href="/how-it-works"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all duration-300"
+                style={{ color: 'var(--text-secondary)', border: '1px solid var(--bg-border)', background: 'var(--bg-secondary)' }}
+                onMouseEnter={e => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.borderColor = 'rgba(124,58,237,0.4)'; }}
+                onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.borderColor = 'var(--bg-border)'; }}>
+                How It Works
+              </Link>
+            </div>
+          </div>
+        </motion.div>
       </section>
 
       <Footer />
