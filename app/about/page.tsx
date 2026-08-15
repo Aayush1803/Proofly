@@ -2,48 +2,10 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Shield, ArrowLeft, Github, Instagram, Linkedin, Heart, Globe, Users, Target, Award } from 'lucide-react';
+import { Shield, ArrowLeft, Heart, Globe, Target, Award } from 'lucide-react';
 import NavBar from '@/components/NavBar';
 import Footer from '@/components/Footer';
 
-const TEAM = [
-  {
-    name: 'Aayush Joshi',
-    role: 'Founder, Lead Architect & Full-Stack Engineer',
-    bio: 'The technical mastermind behind Proofly. Aayush architected, developed, and deployed the entire platform from the ground up. He single-handedly designed the Next.js serverless architecture, orchestrated the Neon Postgres database, integrated the Google Gemini 2.5 Flash multimodal engine, and crafted the premium glassmorphic UI/UX. His vision drives the technical execution and aggressive scaling strategy of Proofly.',
-    avatar: 'AJ',
-    color: '#4F8EFF',
-    github: 'https://github.com/Aayush1803',
-    linkedin: 'https://www.linkedin.com/in/aayushjoshi07/',
-    instagram: 'https://www.instagram.com/aayushjoshiiii_/',
-  },
-  {
-    name: 'Ayushmaan Srivastava',
-    role: 'Co-Founder & Chief Operations Officer',
-    bio: 'The strategic pillar of the Proofly team. Ayushmaan directed the operational framework, provided critical moral support during intensive development sprints, and helped shape the core product philosophy. His deep understanding of the Indian digital landscape was crucial in defining Proofly\'s mission to tackle regional misinformation across 23 languages.',
-    avatar: 'AS',
-    color: '#22D3EE',
-    github: 'https://github.com/Ayushmaan124-cpu',
-    linkedin: 'https://www.linkedin.com/in/ayushmaan-srivastava-70729337b',
-    instagram: 'https://www.instagram.com/ayyuuush._/',
-  },
-  {
-    name: 'Aditya Rauniyar',
-    role: 'Co-Founder & Lead Presenter',
-    bio: 'The voice and visual storyteller of Proofly. Aditya crafted the comprehensive pitch decks, visual presentation materials, and strategic marketing narratives. His ability to distill complex serverless architectures and multimodal AI concepts into compelling, easy-to-understand stories is instrumental in introducing Proofly to investors, hackathon judges, and the public.',
-    avatar: 'AR',
-    color: '#7C3AED',
-    github: 'https://github.com/aditya22-ops',
-    linkedin: 'https://www.linkedin.com/in/aditya-rauniyar-5a410b364',
-    instagram: 'https://www.instagram.com/ig_vegous22/',
-  },
-];
-
-const MILESTONES = [
-  { year: '2026', title: 'Hackathon Project', desc: 'Proofly was built as a hackathon/demo project to explore how AI can help combat misinformation in Indian digital spaces.' },
-  { year: '2026', title: 'v2 Multimodal', desc: 'Added multilingual support (English, Hindi, Tamil), virality risk scoring, regional context analysis, and a 9-step analysis pipeline.' },
-  { year: 'Now', title: 'Open & Growing', desc: 'Actively being developed with plans to add more Indian languages, real fact-checker API integrations, and a public API.' },
-];
 
 const VALUES = [
   { icon: '🇮🇳', title: 'India First', desc: 'Built specifically for the Indian information ecosystem — regional languages, cultural context, and local fact-checkers.' },
@@ -153,87 +115,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Timeline */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-10"
-        >
-          <h2 className="text-3xl font-black text-white mb-3">Our journey</h2>
-          <p className="text-[#8A8AA0]">From hackathon idea to India&apos;s leading fact-check platform.</p>
-        </motion.div>
 
-        <div className="space-y-0">
-          {MILESTONES.map((m, i) => (
-            <motion.div
-              key={m.year}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.15 }}
-              className="flex gap-6"
-            >
-              <div className="flex flex-col items-center">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#4F8EFF] to-[#7C3AED] flex items-center justify-center text-white font-black text-xs flex-shrink-0">
-                  {m.year.slice(2)}
-                </div>
-                {i < MILESTONES.length - 1 && (
-                  <div className="w-px h-12 bg-gradient-to-b from-[#4F8EFF]/40 to-transparent mt-1" />
-                )}
-              </div>
-              <div className={`pb-10 ${i < MILESTONES.length - 1 ? '' : ''}`}>
-                <div className="text-xs text-[#4F8EFF] font-mono font-semibold mb-1">{m.year}</div>
-                <h3 className="text-white font-bold text-lg mb-1">{m.title}</h3>
-                <p className="text-[#8A8AA0] text-sm leading-relaxed">{m.desc}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Team */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-10"
-        >
-          <h2 className="display-font text-3xl font-black text-white mb-3">The team</h2>
-          <div className="glow-divider mt-4 mb-1" />
-          <p className="text-[#8A8AA0]">Passionate builders on a mission.</p>
-        </motion.div>
-
-        <div className="flex flex-wrap gap-4">
-          {TEAM.map((member, i) => (
-            <motion.div
-              key={member.name}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="glass rounded-2xl border border-white/[0.06] p-6 card-interactive w-full sm:w-72"
-            >
-              <div
-                className="aurora-halo w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-black text-white mb-4"
-                style={{ background: `linear-gradient(135deg, ${member.color}, #7C3AED)` }}
-              >
-                {member.avatar}
-              </div>
-              <h3 className="display-font text-white font-bold text-lg">{member.name}</h3>
-              <p className="section-label mt-1 mb-3 text-[9px]" style={{ borderRadius: 4 }}>{member.role}</p>
-              <p className="text-[#8A8AA0] text-sm leading-relaxed">{member.bio}</p>
-              <div className="flex gap-3 mt-4">
-                <a href={member.github} target="_blank" rel="noopener noreferrer" className="text-[#4A4A60] hover:text-white transition-colors"><Github className="w-4 h-4" /></a>
-                <a href={member.instagram} target="_blank" rel="noopener noreferrer" className="text-[#4A4A60] hover:text-[#E1306C] transition-colors"><Instagram className="w-4 h-4" /></a>
-                <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="text-[#4A4A60] hover:text-[#0A66C2] transition-colors"><Linkedin className="w-4 h-4" /></a>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
 
       {/* CTA */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
