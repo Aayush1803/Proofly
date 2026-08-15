@@ -126,7 +126,7 @@ export default function HowItWorksPage() {
           <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
             className="text-lg leading-relaxed max-w-2xl mx-auto"
             style={{ color: 'var(--text-secondary)' }}>
-            Every piece of content goes through Proofly's full AI pipeline — from ingestion to a shareable counter-message — in under 5 seconds.
+            Every piece of content goes through Proofly&apos;s full AI pipeline — from ingestion to a shareable counter-message — in under 5 seconds.
           </motion.p>
         </div>
       </section>

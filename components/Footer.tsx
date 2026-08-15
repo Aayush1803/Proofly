@@ -71,7 +71,7 @@ export default function Footer() {
             </div>
 
             <p className="text-xs leading-relaxed mb-5 max-w-[200px]" style={{ color: 'var(--text-muted)' }}>
-              India's first multimodal AI misinformation detector — supporting all 23 official Indian languages.
+              India&apos;s first multimodal AI misinformation detector — supporting all 23 official Indian languages.
             </p>
 
             {/* Made for India chip */}
