@@ -166,9 +166,9 @@ function HomeInner() {
               className="display-font font-black text-white leading-[1.05] mb-4"
               style={{ fontSize: 'clamp(2.4rem, 4vw, 3.5rem)' }}
             >
-              Before you<br />
-              <span className="gradient-text">forward it,</span>
-              <br />check it.
+              Fight<br />
+              <span className="gradient-text">misinformation</span>
+              <br />with AI.
             </motion.h1>
 
             <motion.p
@@ -178,17 +178,17 @@ function HomeInner() {
               className="text-lg leading-relaxed max-w-sm"
               style={{ color: 'var(--text-secondary)' }}
             >
-              Your family group deserves better than rumours. Proofly gives you a fast, honest answer.
+              India&apos;s most advanced multimodal fact-checking platform. Analyze claims in seconds.
             </motion.p>
           </div>
 
           {/* Feature list with color-coded icons */}
           <div className="space-y-3">
             {[
-              { icon: '🔍', title: 'Checks in seconds',          desc: 'Paste a message, get a True / False / Misleading verdict instantly', color: '#4F8EFF' },
-              { icon: '🌐', title: 'Works in your language',     desc: 'Hindi, Tamil, Bengali, Marathi — all 23 official Indian languages',   color: '#22D3EE' },
-              { icon: '🔗', title: 'Paste a link or a video',    desc: 'Share a URL or upload media — not just text',                         color: '#7C3AED' },
-              { icon: '💬', title: 'Counter-message included',  desc: 'Get a ready reply you can copy and paste back into the group',       color: '#22C55E' },
+              { icon: '🔍', title: '9-Step AI Pipeline', desc: 'Claims extraction, verification & trust scoring', color: '#4F8EFF' },
+              { icon: '🌐', title: '23 Languages',        desc: 'All 23 official Indian languages supported',    color: '#22D3EE' },
+              { icon: '⚡', title: 'Real-time Analysis',  desc: 'Results in under 5 seconds',                   color: '#7C3AED' },
+              { icon: '🛡️', title: 'India-First Context', desc: 'Tuned for regional misinformation patterns',   color: '#22C55E' },
             ].map((f, i) => (
               <motion.div key={f.title}
                 initial={{ opacity: 0, x: -20 }}
@@ -270,12 +270,12 @@ function HomeInner() {
             >
               <div className="mb-7">
                 <h2 className="text-2xl font-black text-white">
-                  {mode === 'login' ? 'Good to see you again' : 'Join Proofly'}
+                  {mode === 'login' ? 'Welcome back' : 'Create your account'}
                 </h2>
                 <p className="text-sm text-[#8A8AA0] mt-1.5">
                   {mode === 'login'
-                    ? 'Pick up where you left off. Your analysis history is waiting.'
-                    : 'Free forever. No credit card. Just honest fact-checking.'}
+                    ? 'Sign in to access your analysis history and saved reports.'
+                    : 'Start fact-checking misinformation across India — for free.'}
                 </p>
               </div>
 

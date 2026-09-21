@@ -123,18 +123,19 @@ export default function Hero({ onSubmit, isLoading }: HeroProps) {
       >
         <div className="section-label mb-6">
           <span className="live-dot" />
-          India-first · 23 languages · Multimodal AI
+          Powered by Multimodal AI · India-first · All 23 Official Languages
         </div>
 
         <h1 className="display-font text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none mb-4">
-          <span style={{ color: 'var(--text-primary)' }}>Is that message</span>
+          <span style={{ color: 'var(--text-primary)' }}>Truth has a</span>
           <br />
-          <span className="gradient-text">actually true?</span>
+          <span className="gradient-text">new guardian.</span>
         </h1>
 
         <p className="text-lg max-w-xl mx-auto mt-5 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-          Paste anything your family sent — a claim, a link, a screenshot.
-          Get a verdict in under 5 seconds, in your language.
+          Paste a WhatsApp forward, a suspicious link, or upload a video.
+          <br />
+          <span style={{ color: 'var(--text-primary)' }} className="font-semibold">Proofly</span> runs a 9-step deep analysis in seconds.
         </p>
       </motion.div>
 
@@ -184,7 +185,7 @@ export default function Hero({ onSubmit, isLoading }: HeroProps) {
                     id="text-input"
                     value={textInput}
                     onChange={e => setTextInput(e.target.value)}
-                    placeholder="Paste a claim, a message, or anything you&apos;re not sure about..."
+                    placeholder="Paste a WhatsApp forward, news article, tweet, or any text claim here..."
                     className="w-full h-40 rounded-xl p-4 text-sm resize-none focus:outline-none transition-all duration-200 leading-relaxed font-sans"
                     style={{
                       background: 'var(--bg-secondary)',
@@ -312,7 +313,7 @@ export default function Hero({ onSubmit, isLoading }: HeroProps) {
 
         {/* Trust badges */}
         <div className="flex flex-wrap items-center justify-center gap-4 mt-6 text-xs" style={{ color: 'var(--text-muted)' }}>
-          {['No account needed to try', 'All 23 Indian languages', 'Free forever', 'No data sold'].map((badge) => (
+          {['India-first focus', 'All 23 Official Languages', 'Free to use', 'Hackathon project'].map((badge) => (
             <div key={badge} className="flex items-center gap-1.5">
               <div className="w-1 h-1 rounded-full" style={{ background: 'var(--text-muted)' }} />
               <span>{badge}</span>
@@ -379,12 +380,12 @@ export default function Hero({ onSubmit, isLoading }: HeroProps) {
 
 
       {/* Stats row */}
-      <div className="flex flex-wrap justify-center gap-8 mt-16 relative z-10">
+      <div className="flex flex-wrap justify-center gap-10 mt-16 relative z-10">
         {[
           { value: '23',    label: 'Indian Languages' },
-          { value: '9',     label: 'Steps per Analysis' },
-          { value: '< 5s',  label: 'Avg. Time to Verdict' },
-          { value: '₹0',    label: 'Cost to You' },
+          { value: '9-Step', label: 'AI Pipeline' },
+          { value: 'Free',   label: 'Always Free' },
+          { value: '<5s',    label: 'Avg. Response Time' },
         ].map((stat, i) => (
           <div key={stat.label} className="text-center">
             <div
