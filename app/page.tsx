@@ -26,11 +26,15 @@ function HomeInner() {
     searchParams.get('mode') === 'signup' ? 'signup' : 'login'
   );
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
-  const [showPass, setShowPass] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [showPass, setShowPass]   = useState(false);
+  const [loading, setLoading]     = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError]         = useState('');
+  const [success, setSuccess]     = useState('');
+  // OTP state
+  const [otpSent, setOtpSent]     = useState(false);
+  const [otpCode, setOtpCode]     = useState('');
+  const [otpLoading, setOtpLoading] = useState(false);
 
   // Redirect authenticated users directly to analyzer
   useEffect(() => {
@@ -40,6 +44,43 @@ function HomeInner() {
   const update = (k: string, v: string) => {
     setForm(f => ({ ...f, [k]: v }));
     setError('');
+  };
+
+  // Reset OTP state whenever switching modes
+  const switchMode = (m: 'login' | 'signup') => {
+    setMode(m);
+    setError('');
+    setSuccess('');
+    setOtpSent(false);
+    setOtpCode('');
+  };
+
+  // ── Step 1 (signup): send OTP ─────────────────────────────────────────────
+  const handleSendOtp = async () => {
+    if (!form.email || !/\S+@\S+\.\S+/.test(form.email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+    if (!form.name.trim()) { setError('Please enter your name.'); return; }
+    if (form.password.length < 8) { setError('Password must be at least 8 characters.'); return; }
+    if (form.password !== form.confirm) { setError('Passwords do not match.'); return; }
+
+    setOtpLoading(true);
+    setError('');
+    try {
+      const res = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setError(data.error ?? 'Failed to send code.'); return; }
+      setOtpSent(true);
+    } catch {
+      setError('Network error. Please try again.');
+    } finally {
+      setOtpLoading(false);
+    }
   };
 
   const validateForm = () => {
@@ -55,26 +96,62 @@ function HomeInner() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Signup: OTP already sent → verify code then create account
+    if (mode === 'signup') {
+      if (!otpSent) { handleSendOtp(); return; }
+      if (!otpCode || otpCode.length < 6) { setError('Please enter the 6-digit code from your email.'); return; }
+
+      setLoading(true);
+      setError('');
+
+      // Client-side pre-check (UX only — auth.ts re-validates server-side)
+      const verifyRes = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email, code: otpCode }),
+      });
+      const verifyData = await verifyRes.json();
+      if (!verifyData.valid) {
+        setLoading(false);
+        setError(verifyData.error ?? 'Invalid code.');
+        return;
+      }
+
+      const result = await signIn('credentials', {
+        redirect: false,
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        mode: 'signup',
+        otpCode,
+      });
+      setLoading(false);
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        setSuccess('Account created! Redirecting...');
+        setTimeout(() => router.push('/analyze'), 1000);
+      }
+      return;
+    }
+
+    // Login flow
     const err = validateForm();
     if (err) { setError(err); return; }
-
     setLoading(true);
     setError('');
-
     const result = await signIn('credentials', {
       redirect: false,
-      name: form.name,
       email: form.email,
       password: form.password,
-      mode,
+      mode: 'login',
     });
-
     setLoading(false);
-
     if (result?.error) {
       setError(result.error);
     } else {
-      setSuccess(mode === 'signup' ? 'Account created! Redirecting...' : 'Welcome back! Redirecting...');
+      setSuccess('Welcome back! Redirecting...');
       setTimeout(() => router.push('/analyze'), 1000);
     }
   };
@@ -248,7 +325,7 @@ function HomeInner() {
             {(['login', 'signup'] as const).map(m => (
               <button
                 key={m}
-                onClick={() => { setMode(m); setError(''); setSuccess(''); }}
+                onClick={() => switchMode(m)}
                 className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
                   mode === m
                     ? 'bg-gradient-to-r from-[#4F8EFF] to-[#7C3AED] text-white shadow-lg'
@@ -270,11 +347,13 @@ function HomeInner() {
             >
               <div className="mb-7">
                 <h2 className="text-2xl font-black text-white">
-                  {mode === 'login' ? 'Welcome back' : 'Create your account'}
+                  {mode === 'login' ? 'Welcome back' : otpSent ? 'Check your email' : 'Create your account'}
                 </h2>
                 <p className="text-sm text-[#8A8AA0] mt-1.5">
                   {mode === 'login'
                     ? 'Sign in to access your analysis history and saved reports.'
+                    : otpSent
+                    ? `We sent a 6-digit code to ${form.email}. Enter it below to verify.`
                     : 'Start fact-checking misinformation across India — for free.'}
                 </p>
               </div>
@@ -306,103 +385,151 @@ function HomeInner() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
-                <AnimatePresence>
-                  {mode === 'signup' && (
+                {/* ── OTP entry step (signup only, after code sent) ── */}
+                <AnimatePresence mode="wait">
+                  {mode === 'signup' && otpSent ? (
                     <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
+                      key="otp-step"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.25 }}
+                      className="space-y-4"
                     >
-                      <InputField
-                        id="name-input"
-                        icon={<User className="w-4 h-4" />}
-                        type="text"
-                        placeholder="Full name"
-                        value={form.name}
-                        onChange={v => update('name', v)}
-                        autoComplete="name"
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                <InputField
-                  id="email-input"
-                  icon={<Mail className="w-4 h-4" />}
-                  type="email"
-                  placeholder="Email address"
-                  value={form.email}
-                  onChange={v => update('email', v)}
-                  autoComplete="email"
-                />
-
-                <div className="space-y-1.5">
-                  <InputField
-                    id="password-input"
-                    icon={<Lock className="w-4 h-4" />}
-                    type={showPass ? 'text' : 'password'}
-                    placeholder="Password (min. 8 characters)"
-                    value={form.password}
-                    onChange={v => update('password', v)}
-                    autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-                    suffix={
-                      <button type="button" onClick={() => setShowPass(!showPass)} className="text-[#4A4A60] hover:text-[#8A8AA0] transition-colors">
-                        {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                      </button>
-                    }
-                  />
-                  {mode === 'signup' && form.password && (
-                    <div className="flex items-center gap-2 px-1">
-                      <div className="flex gap-1 flex-1">
-                        {[1,2,3,4].map(i => (
-                          <div
-                            key={i}
-                            className="h-1 flex-1 rounded-full transition-all duration-300"
-                            style={{ background: i <= strength ? strengthColor : '#1E1E2E' }}
-                          />
-                        ))}
+                      {/* OTP input */}
+                      <div
+                        className="flex items-center gap-3 bg-[#0A0A0F] border rounded-xl px-4 py-3.5 transition-all duration-200 border-[#4F8EFF] ring-1 ring-[#4F8EFF]/20"
+                      >
+                        <span className="text-[#4F8EFF] text-lg">🔑</span>
+                        <input
+                          id="otp-input"
+                          type="text"
+                          inputMode="numeric"
+                          maxLength={6}
+                          placeholder="Enter 6-digit code"
+                          value={otpCode}
+                          onChange={e => { setOtpCode(e.target.value.replace(/\D/g, '')); setError(''); }}
+                          className="flex-1 bg-transparent text-sm text-white placeholder-[#4A4A60] focus:outline-none tracking-[0.35em] font-mono text-lg"
+                          autoFocus
+                        />
                       </div>
-                      <span className="text-xs font-medium" style={{ color: strengthColor || '#4A4A60' }}>
-                        {strengthLabel}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <AnimatePresence>
-                  {mode === 'signup' && (
+                      <button
+                        type="button"
+                        onClick={() => { setOtpSent(false); setOtpCode(''); setError(''); }}
+                        className="text-xs text-[#4A4A60] hover:text-[#8A8AA0] transition-colors"
+                      >
+                        ← Back / change email
+                      </button>
+                    </motion.div>
+                  ) : (
                     <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
+                      key="form-step"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{ duration: 0.25 }}
+                      className="space-y-4"
                     >
+                      <AnimatePresence>
+                        {mode === 'signup' && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <InputField
+                              id="name-input"
+                              icon={<User className="w-4 h-4" />}
+                              type="text"
+                              placeholder="Full name"
+                              value={form.name}
+                              onChange={v => update('name', v)}
+                              autoComplete="name"
+                            />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
                       <InputField
-                        id="confirm-input"
-                        icon={<Lock className="w-4 h-4" />}
-                        type={showPass ? 'text' : 'password'}
-                        placeholder="Confirm password"
-                        value={form.confirm}
-                        onChange={v => update('confirm', v)}
-                        autoComplete="new-password"
-                        suffix={
-                          form.confirm && form.password === form.confirm
-                            ? <Check className="w-4 h-4 text-green-400" />
-                            : null
-                        }
+                        id="email-input"
+                        icon={<Mail className="w-4 h-4" />}
+                        type="email"
+                        placeholder="Email address"
+                        value={form.email}
+                        onChange={v => update('email', v)}
+                        autoComplete="email"
                       />
+
+                      <div className="space-y-1.5">
+                        <InputField
+                          id="password-input"
+                          icon={<Lock className="w-4 h-4" />}
+                          type={showPass ? 'text' : 'password'}
+                          placeholder="Password (min. 8 characters)"
+                          value={form.password}
+                          onChange={v => update('password', v)}
+                          autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+                          suffix={
+                            <button type="button" onClick={() => setShowPass(!showPass)} className="text-[#4A4A60] hover:text-[#8A8AA0] transition-colors">
+                              {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                            </button>
+                          }
+                        />
+                        {mode === 'signup' && form.password && (
+                          <div className="flex items-center gap-2 px-1">
+                            <div className="flex gap-1 flex-1">
+                              {[1,2,3,4].map(i => (
+                                <div
+                                  key={i}
+                                  className="h-1 flex-1 rounded-full transition-all duration-300"
+                                  style={{ background: i <= strength ? strengthColor : '#1E1E2E' }}
+                                />
+                              ))}
+                            </div>
+                            <span className="text-xs font-medium" style={{ color: strengthColor || '#4A4A60' }}>
+                              {strengthLabel}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+
+                      <AnimatePresence>
+                        {mode === 'signup' && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <InputField
+                              id="confirm-input"
+                              icon={<Lock className="w-4 h-4" />}
+                              type={showPass ? 'text' : 'password'}
+                              placeholder="Confirm password"
+                              value={form.confirm}
+                              onChange={v => update('confirm', v)}
+                              autoComplete="new-password"
+                              suffix={
+                                form.confirm && form.password === form.confirm
+                                  ? <Check className="w-4 h-4 text-green-400" />
+                                  : null
+                              }
+                            />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
+                      {mode === 'login' && (
+                        <div className="text-right">
+                          <button type="button" className="text-xs text-[#4F8EFF] hover:text-[#6BA3FF] transition-colors">
+                            Forgot password?
+                          </button>
+                        </div>
+                      )}
                     </motion.div>
                   )}
                 </AnimatePresence>
-
-                {mode === 'login' && (
-                  <div className="text-right">
-                    <button type="button" className="text-xs text-[#4F8EFF] hover:text-[#6BA3FF] transition-colors">
-                      Forgot password?
-                    </button>
-                  </div>
-                )}
 
                 <AnimatePresence>
                   {error && (
@@ -435,17 +562,21 @@ function HomeInner() {
                 <motion.button
                   id="auth-submit-btn"
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || otpLoading}
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                   className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#4F8EFF] via-[#5B6EF7] to-[#7C3AED] text-white font-semibold flex items-center justify-center gap-2 shadow-lg shadow-blue-900/30 hover:shadow-blue-900/50 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  {loading ? (
+                  {(loading || otpLoading) ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <>
                       <Zap className="w-4 h-4" />
-                      {mode === 'login' ? 'Sign In' : 'Create Account'}
+                      {mode === 'login'
+                        ? 'Sign In'
+                        : otpSent
+                        ? 'Verify & Create Account'
+                        : 'Send Verification Code'}
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}

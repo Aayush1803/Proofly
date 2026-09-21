@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import prisma from '@/lib/prisma';
 import { AnalyzeRequest, AnalysisResult, Claim, TrustedSource, TrustBreakdown } from '@/lib/types';
 
 // ─── Gemini prompt ─────────────────────────────────────────────────────────────
@@ -344,6 +347,23 @@ export async function POST(req: NextRequest) {
     const result = mapResult(parsed, userInput, Date.now() - start);
     console.log(`[Proofly] ✅ Success — trust_score=${result.trustScore}, claims=${result.claims.length}`);
     console.log('='.repeat(60));
+
+    // ── Persist analysis to DB (non-blocking) ──────────────────────────────────
+    const session = await getServerSession(authOptions);
+    const userId = (session?.user as any)?.id ?? null;
+    const langRaw = (parsed.language_detected as string | undefined) ?? 'Unknown';
+    const claimsArr = (parsed.claims as unknown[]) ?? [];
+
+    prisma.analysis.create({
+      data: {
+        userId,
+        inputSnippet: userInput.slice(0, 200),
+        inputType:    body.type ?? 'text',
+        trustScore:   result.trustScore,
+        language:     langRaw,
+        claimsCount:  claimsArr.length,
+      },
+    }).catch(err => console.error('[Proofly] DB analysis save failed (non-fatal):', err));
 
     return NextResponse.json(result);
 

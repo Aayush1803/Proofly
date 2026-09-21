@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import prisma from '@/lib/prisma';
 
 // App Router route segment config — extends Netlify function timeout
 export const maxDuration = 60; // seconds
@@ -221,6 +224,24 @@ export async function POST(req: NextRequest) {
     }
 
     console.log(`[Media] ✅ Got ${rawText.length} chars from Gemini`);
+
+    // ── Persist analysis to DB (non-blocking) ──────────────────────────────────
+    try {
+      const parsed = JSON.parse(rawText) as Record<string, unknown>;
+      const session = await getServerSession(authOptions);
+      const userId = (session?.user as any)?.id ?? null;
+
+      prisma.analysis.create({
+        data: {
+          userId,
+          inputSnippet: file.name.slice(0, 200),
+          inputType:    'media',
+          trustScore:   Math.max(0, Math.min(100, Number(parsed.trust_score ?? 50))),
+          language:     String(parsed.language_detected ?? 'Unknown'),
+          claimsCount:  ((parsed.claims as unknown[]) ?? []).length,
+        },
+      }).catch(err => console.error('[Media] DB analysis save failed (non-fatal):', err));
+    } catch { /* JSON parse error — skip DB save, never block response */ }
 
     return NextResponse.json({
       text: rawText,

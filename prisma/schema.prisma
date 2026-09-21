@@ -7,12 +7,58 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ─── User ────────────────────────────────────────────────────────────────────
 model User {
-  id            String   @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String
-  email         String   @unique
+  email         String       @unique
   passwordHash  String?
   image         String?
-  analysisCount Int      @default(0)
-  createdAt     DateTime @default(now())
+  emailVerified Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @default(now()) @updatedAt
+
+  loginEvents   LoginEvent[]
+  analyses      Analysis[]
+}
+
+// ─── OTP Verification ────────────────────────────────────────────────────────
+// Stores 6-digit codes sent on signup. Expires after 5 minutes.
+model OtpCode {
+  id        String   @id @default(cuid())
+  email     String
+  code      String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
+
+// ─── Login History ───────────────────────────────────────────────────────────
+model LoginEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider  String   @default("credentials") // "credentials" | "google"
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ─── Analysis Log ────────────────────────────────────────────────────────────
+model Analysis {
+  id           String   @id @default(cuid())
+  userId       String?
+  user         User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  inputSnippet String
+  inputType    String   // "text" | "url" | "media"
+  trustScore   Int
+  language     String
+  claimsCount  Int
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
 }
