@@ -116,9 +116,9 @@ function getViralityRisk(score: number) {
   const clamped = Math.max(5, Math.min(98, viralScore));
   const level = clamped > 65 ? 'High' : clamped > 35 ? 'Medium' : 'Low';
   const reasons = {
-    High: 'This content uses emotionally charged language and lacks verifiable sources, making it highly shareable in echo chambers and messaging groups like WhatsApp.',
+    High: 'This content uses emotionally charged language and lacks verifiable sources, making it highly shareable in echo chambers and across social media and messaging platforms.',
     Medium: 'The content has some misleading elements that could propagate in politically active communities, but its partially verifiable nature limits mass virality.',
-    Low: 'The factual, well-sourced nature of this content limits its sensationalist appeal, making it less likely to go viral through misinformation channels.',
+    Low: 'The factual, well-sourced nature of this content limits its sensationalist appeal, making it less likely to spread through misinformation channels.',
   };
   return { score: clamped, level: level as 'Low' | 'Medium' | 'High', reason: reasons[level] };
 }
@@ -135,8 +135,8 @@ const CONTEXT = [
     sensitivity: 'MEDIUM — Primarily politically sensitive; limited immediate risk of communal harm.',
   },
   {
-    regional: 'This content appears geographically neutral but is optimised for pan-India mobile sharing via WhatsApp forwards.',
-    cultural: 'Uses aspirational health or economic claims, a common persuasion tactic in semi-urban and rural forward chains.',
+    regional: 'This content appears geographically neutral but is optimised for pan-India mobile sharing across digital platforms.',
+    cultural: 'Uses aspirational health or economic claims, a common persuasion tactic in semi-urban and rural online communities.',
     sensitivity: 'LOW — Content is misleading but unlikely to incite immediate social discord.',
   },
 ];

@@ -101,7 +101,7 @@ OUTPUT FORMAT (strict JSON, every field required):
     "cultural": "Cultural framing or sensitivity context",
     "sensitivity": "HIGH/MEDIUM/LOW — reason for sensitivity rating"
   },
-  "counter_message": "A factual, polite counter-message someone can share on WhatsApp to debunk this"
+  "counter_message": "A factual, polite counter-message someone can share to debunk this content"
 }
 `;
 

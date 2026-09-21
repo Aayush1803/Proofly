@@ -11,20 +11,20 @@ interface HeroProps {
 }
 
 
-// Realistic sample inputs — no "urgent forward" language, just everyday misinformation
+// Realistic sample inputs — everyday misinformation circulating on messaging platforms
 const SAMPLE_INPUTS = {
-  text: `My uncle sent this in the family group — apparently onion juice rubbed on the scalp every night reverses baldness completely within 2 weeks. A study from AIIMS supposedly confirmed this. Has anyone tried it? The video had 4 lakh views.`,
+  text: `A viral message is circulating in several groups claiming that onion juice applied to the scalp every night reverses baldness completely within 2 weeks. The post cites an AIIMS study as the source. The video has received over 4 lakh views online.`,
   url: `https://www.indiatoday.in/fact-check`,
   media: null,
 };
 
 // Rotating sample pool — so "Load sample" feels fresh
 const SAMPLE_POOL = [
-  `Eating 5 basil leaves (tulsi) daily on an empty stomach removes all toxins from the liver and prevents diabetes. A WhatsApp message said this was confirmed by Patanjali research.`,
-  `My colleague says the government is planning to cut EPFO pension by 30% from January. He got it from a news channel's WhatsApp group. Is this actually happening?`,
-  `Someone shared that Jio will start charging ₹200/month for WhatsApp calls from next month. The screenshot looked like a news article but I couldn't find the source.`,
-  `A viral reel is claiming that Indian school kids who drink fluoride-treated tap water have lower IQ scores — citing a Harvard study. My sister is worried about her kids.`,
-  `My neighbor showed me a video where someone claims lemon juice mixed with baking soda can cure COVID-19 completely within 48 hours. It had 2 million views on YouTube.`,
+  `A widely circulated health claim states that consuming 5 basil (tulsi) leaves daily on an empty stomach removes all liver toxins and prevents diabetes. The post attributes this to Patanjali research, though no published study has been cited.`,
+  `A message circulating in several professional groups claims the government is planning to cut EPFO pension payouts by 30% starting January. The claim is attributed to a news channel broadcast but no official notification has been found.`,
+  `A screenshot resembling a news article is being shared online, claiming that Jio will begin charging ₹200/month for internet calls from next month. No verifiable source has been linked in the post.`,
+  `A viral reel claims that Indian school children who consume fluoride-treated tap water score lower on IQ assessments, citing a Harvard study. The claim is spreading rapidly and raising public concern.`,
+  `A widely shared video claims that a mixture of lemon juice and baking soda can completely cure COVID-19 within 48 hours. The video has accumulated over 2 million views across platforms.`,
 ];
 
 type TabType = 'text' | 'url' | 'media';
@@ -133,7 +133,7 @@ export default function Hero({ onSubmit, isLoading }: HeroProps) {
         </h1>
 
         <p className="text-lg max-w-xl mx-auto mt-5 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-          Paste a WhatsApp forward, a suspicious link, or upload a video.
+          Paste a viral message, a suspicious link, or upload media content.
           <br />
           <span style={{ color: 'var(--text-primary)' }} className="font-semibold">Proofly</span> runs a 9-step deep analysis in seconds.
         </p>
@@ -185,7 +185,7 @@ export default function Hero({ onSubmit, isLoading }: HeroProps) {
                     id="text-input"
                     value={textInput}
                     onChange={e => setTextInput(e.target.value)}
-                    placeholder="Paste a WhatsApp forward, news article, tweet, or any text claim here..."
+                    placeholder="Paste a viral message, news article, social media post, or any text claim here..."
                     className="w-full h-40 rounded-xl p-4 text-sm resize-none focus:outline-none transition-all duration-200 leading-relaxed font-sans"
                     style={{
                       background: 'var(--bg-secondary)',

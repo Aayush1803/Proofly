@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     'Marathi fact check',
     'Telugu fact check',
     'Urdu fact check',
-    'WhatsApp forward checker',
+    'viral content fact checker',
     'deepfake detection',
     'Proofly',
     'Indian language AI',
