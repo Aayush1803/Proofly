@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
-import { Zap, ChevronDown, LogOut, User, BarChart3, Sun, Moon, Menu, X } from 'lucide-react';
+import { Zap, ChevronDown, LogOut, User, BarChart3, Sun, Moon, Menu, X, Edit2 } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -214,6 +214,7 @@ export default function NavBar() {
                     {[
                       { icon: <User      className="w-4 h-4" />, label: 'View Profile',  href: '/profile' },
                       { icon: <BarChart3 className="w-4 h-4" />, label: 'My Analyses',   href: '/profile#analyses' },
+                      { icon: <Edit2     className="w-4 h-4" />, label: 'Edit Profile',  href: '/profile?edit=1' },
                     ].map(item => (
                       <Link
                         key={item.label}

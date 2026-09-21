@@ -14,6 +14,8 @@ model User {
   email         String       @unique
   passwordHash  String?
   image         String?
+  avatarUrl     String?
+  bio           String?
   emailVerified Boolean      @default(false)
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @default(now()) @updatedAt
