@@ -35,8 +35,9 @@ export async function POST(req: NextRequest) {
     // ── Send email ────────────────────────────────────────────────────────────
     if (process.env.RESEND_API_KEY) {
       const resend = new Resend(process.env.RESEND_API_KEY);
+      const fromAddress = process.env.RESEND_FROM_EMAIL ?? 'Proofly AI <onboarding@resend.dev>';
       await resend.emails.send({
-        from: 'Proofly AI <noreply@proofly.ai>',
+        from: fromAddress,
         to: email,
         subject: `${code} — Your Proofly verification code`,
         html: `
