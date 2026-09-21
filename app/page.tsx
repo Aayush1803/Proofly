@@ -31,10 +31,10 @@ function HomeInner() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError]         = useState('');
   const [success, setSuccess]     = useState('');
-  // OTP state
-  const [otpSent, setOtpSent]     = useState(false);
-  const [otpCode, setOtpCode]     = useState('');
-  const [otpLoading, setOtpLoading] = useState(false);
+  const [otpSent, setOtpSent]         = useState(false);
+  const [otpCode, setOtpCode]          = useState('');
+  const [otpLoading, setOtpLoading]    = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0); // seconds remaining
 
   // Redirect authenticated users directly to the product hub
   useEffect(() => {
@@ -53,17 +53,27 @@ function HomeInner() {
     setSuccess('');
     setOtpSent(false);
     setOtpCode('');
+    setResendCooldown(0);
   };
 
-  // ── Step 1 (signup): send OTP ─────────────────────────────────────────────
-  const handleSendOtp = async () => {
-    if (!form.email || !/\S+@\S+\.\S+/.test(form.email)) {
-      setError('Please enter a valid email address.');
-      return;
+  // Countdown timer for resend cooldown
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const t = setTimeout(() => setResendCooldown(c => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [resendCooldown]);
+
+  // ── Step 1 (signup): send OTP ────────────────────────────────────────────
+  const handleSendOtp = async (isResend = false) => {
+    if (!isResend) {
+      if (!form.email || !/\S+@\S+\.\S+/.test(form.email)) {
+        setError('Please enter a valid email address.');
+        return;
+      }
+      if (!form.name.trim()) { setError('Please enter your name.'); return; }
+      if (form.password.length < 8) { setError('Password must be at least 8 characters.'); return; }
+      if (form.password !== form.confirm) { setError('Passwords do not match.'); return; }
     }
-    if (!form.name.trim()) { setError('Please enter your name.'); return; }
-    if (form.password.length < 8) { setError('Password must be at least 8 characters.'); return; }
-    if (form.password !== form.confirm) { setError('Passwords do not match.'); return; }
 
     setOtpLoading(true);
     setError('');
@@ -76,6 +86,9 @@ function HomeInner() {
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? 'Failed to send code.'); return; }
       setOtpSent(true);
+      setOtpCode('');
+      setResendCooldown(30); // 30-second cooldown
+      if (isResend) setSuccess('New code sent! Check your inbox.');
     } catch {
       setError('Network error. Please try again.');
     } finally {
@@ -105,19 +118,7 @@ function HomeInner() {
       setLoading(true);
       setError('');
 
-      // Client-side pre-check (UX only — auth.ts re-validates server-side)
-      const verifyRes = await fetch('/api/auth/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: form.email, code: otpCode }),
-      });
-      const verifyData = await verifyRes.json();
-      if (!verifyData.valid) {
-        setLoading(false);
-        setError(verifyData.error ?? 'Invalid code.');
-        return;
-      }
-
+      // Submit directly to signIn — auth.ts validates+consumes the OTP server-side
       const result = await signIn('credentials', {
         redirect: false,
         name: form.name,
@@ -128,9 +129,10 @@ function HomeInner() {
       });
       setLoading(false);
       if (result?.error) {
+        // OTP was wrong / expired — let them try again without back-to-email step
         setError(result.error);
       } else {
-              setSuccess('Account created! Redirecting...');
+        setSuccess('Account created! Redirecting...');
         setTimeout(() => router.push('/misinformation'), 1000);
       }
       return;
@@ -413,13 +415,25 @@ function HomeInner() {
                           autoFocus
                         />
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => { setOtpSent(false); setOtpCode(''); setError(''); }}
-                        className="text-xs text-[#4A4A60] hover:text-[#8A8AA0] transition-colors"
-                      >
-                        ← Back / change email
-                      </button>
+                      {/* Resend + back row */}
+                      <div className="flex items-center justify-between mt-1">
+                        <button
+                          type="button"
+                          onClick={() => { setOtpSent(false); setOtpCode(''); setError(''); setSuccess(''); setResendCooldown(0); }}
+                          className="text-xs text-[#4A4A60] hover:text-[#8A8AA0] transition-colors"
+                        >
+                          ← Change email
+                        </button>
+                        <button
+                          type="button"
+                          disabled={resendCooldown > 0 || otpLoading}
+                          onClick={() => handleSendOtp(true)}
+                          className="text-xs font-semibold transition-colors disabled:cursor-not-allowed"
+                          style={{ color: resendCooldown > 0 ? '#4A4A60' : '#4F8EFF' }}
+                        >
+                          {otpLoading ? 'Sending…' : resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend code'}
+                        </button>
+                      </div>
                     </motion.div>
                   ) : (
                     <motion.div
