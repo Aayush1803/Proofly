@@ -198,7 +198,7 @@ function ProfilePageInner() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[320px] rounded-full bg-gradient-to-r from-[#4F8EFF]/10 to-[#7C3AED]/10 blur-3xl pointer-events-none" />
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-10">
-          <Link href="/analyze" className="inline-flex items-center gap-1.5 text-sm text-[#8A8AA0] hover:text-white transition-colors mb-8">
+          <Link href="/misinformation" className="inline-flex items-center gap-1.5 text-sm text-[#8A8AA0] hover:text-white transition-colors mb-8">
             <ArrowLeft className="w-4 h-4" /> Back to analyzer
           </Link>
 
@@ -335,7 +335,7 @@ function ProfilePageInner() {
             <motion.div key="analyses" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-bold text-white" id="analyses">Recent Analyses</h2>
-                <Link href="/analyze" className="flex items-center gap-1.5 text-sm text-[#4F8EFF] hover:text-[#6BA3FF] transition-colors">
+                <Link href="/misinformation" className="flex items-center gap-1.5 text-sm text-[#4F8EFF] hover:text-[#6BA3FF] transition-colors">
                   <Zap className="w-3.5 h-3.5" /> New Analysis
                 </Link>
               </div>
@@ -344,7 +344,7 @@ function ProfilePageInner() {
                 <div className="glass rounded-2xl border border-white/[0.06] p-12 text-center">
                   <BarChart3 className="w-10 h-10 text-[#1E1E2E] mx-auto mb-3" />
                   <p className="text-[#4A4A60] text-sm">No analyses yet.</p>
-                  <Link href="/analyze" className="inline-flex items-center gap-2 mt-4 text-sm font-semibold text-[#4F8EFF] hover:text-[#6BA3FF] transition-colors">
+                  <Link href="/misinformation" className="inline-flex items-center gap-2 mt-4 text-sm font-semibold text-[#4F8EFF] hover:text-[#6BA3FF] transition-colors">
                     <Zap className="w-4 h-4" /> Run your first fact-check
                   </Link>
                 </div>

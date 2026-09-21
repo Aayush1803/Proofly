@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
-import { Zap, ChevronDown, LogOut, User, BarChart3, Sun, Moon, Menu, X, Edit2 } from 'lucide-react';
+import { Zap, ChevronDown, LogOut, User, BarChart3, Sun, Moon, Menu, X, Edit2, ScanLine, Shield } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -9,9 +9,26 @@ import { useState, useRef, useEffect } from 'react';
 import { useTheme } from '@/components/ThemeProvider';
 import { usePathname } from 'next/navigation';
 
+const PRODUCTS = [
+  {
+    label: 'Deepfake Detection',
+    href: '/deepfake',
+    icon: ScanLine,
+    desc: 'Image · Video · Audio forensics',
+    color: '#EF4444',
+  },
+  {
+    label: 'Misinformation Detection',
+    href: '/misinformation',
+    icon: Shield,
+    desc: 'Text · URL · Media fact-check',
+    color: '#4F8EFF',
+  },
+];
+
 const NAV_LINKS = [
   { label: 'How It Works', href: '/how-it-works' },
-  { label: 'Technology',   href: '/technology' },
+  { label: 'Research',     href: '/research' },
   { label: 'About',        href: '/about' },
 ];
 
@@ -19,10 +36,12 @@ export default function NavBar() {
   const { data: session, status } = useSession();
   const { theme, toggle } = useTheme();
   const pathname = usePathname();
-  const [menuOpen,   setMenuOpen]   = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const menuRef   = useRef<HTMLDivElement>(null);
-  const mobileRef = useRef<HTMLDivElement>(null);
+  const [menuOpen,      setMenuOpen]      = useState(false);
+  const [mobileOpen,    setMobileOpen]    = useState(false);
+  const [productsOpen,  setProductsOpen]  = useState(false);
+  const menuRef      = useRef<HTMLDivElement>(null);
+  const mobileRef    = useRef<HTMLDivElement>(null);
+  const productsRef  = useRef<HTMLDivElement>(null);
 
   // Scroll-driven opacity / blur enhancement
   const { scrollY, scrollYProgress } = useScroll();
@@ -35,8 +54,9 @@ export default function NavBar() {
   // Close dropdowns on outside click
   useEffect(() => {
     function handler(e: MouseEvent) {
-      if (menuRef.current   && !menuRef.current.contains(e.target as Node))   setMenuOpen(false);
-      if (mobileRef.current && !mobileRef.current.contains(e.target as Node)) setMobileOpen(false);
+      if (menuRef.current     && !menuRef.current.contains(e.target as Node))     setMenuOpen(false);
+      if (mobileRef.current   && !mobileRef.current.contains(e.target as Node))   setMobileOpen(false);
+      if (productsRef.current && !productsRef.current.contains(e.target as Node)) setProductsOpen(false);
     }
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -70,7 +90,7 @@ export default function NavBar() {
         className="floating-nav pointer-events-auto w-full max-w-5xl rounded-2xl px-4 h-14 flex items-center justify-between"
       >
         {/* ── Logo ─────────────────────────────────────────────── */}
-        <Link href={session ? '/analyze' : '/'} className="flex items-center gap-2.5 group flex-shrink-0">
+        <Link href={session ? '/misinformation' : '/'} className="flex items-center gap-2.5 group flex-shrink-0">
           <motion.div
             whileHover={{ scale: 1.08 }}
             transition={{ duration: 0.2 }}
@@ -96,6 +116,74 @@ export default function NavBar() {
 
         {/* ── Center Nav (desktop) ──────────────────────────────── */}
         <div className="hidden md:flex items-center gap-1">
+          {/* Products Dropdown */}
+          <div className="relative" ref={productsRef}>
+            <button
+              onClick={() => setProductsOpen(!productsOpen)}
+              className="relative flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-xl transition-all duration-200"
+              style={{
+                color: (pathname === '/deepfake' || pathname === '/misinformation') ? '#4F8EFF' : 'var(--text-secondary)',
+                background: productsOpen ? 'var(--bg-hover)' : 'transparent',
+              }}
+            >
+              <span>Products</span>
+              <motion.div animate={{ rotate: productsOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                <ChevronDown className="w-3.5 h-3.5" />
+              </motion.div>
+              {(pathname === '/deepfake' || pathname === '/misinformation') && (
+                <motion.div
+                  layoutId="nav-active"
+                  className="absolute inset-0 rounded-xl"
+                  style={{ background: 'rgba(79,142,255,0.08)', border: '1px solid rgba(79,142,255,0.15)' }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                />
+              )}
+            </button>
+            <AnimatePresence>
+              {productsOpen && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.94, y: -8 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.94, y: -8 }}
+                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute left-0 top-full mt-2 w-64 glass-strong rounded-2xl overflow-hidden shadow-2xl"
+                  style={{ border: '1px solid var(--glass-border)' }}
+                >
+                  <div className="px-3 py-2.5 border-b" style={{ borderColor: 'var(--bg-border)' }}>
+                    <p className="text-[10px] uppercase tracking-widest font-semibold" style={{ color: 'var(--text-muted)' }}>Detection Products</p>
+                  </div>
+                  {PRODUCTS.map(product => {
+                    const Icon = product.icon;
+                    const isActive = pathname === product.href;
+                    return (
+                      <Link
+                        key={product.label}
+                        href={product.href}
+                        onClick={() => setProductsOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3.5 transition-colors"
+                        style={{ background: isActive ? `${product.color}08` : 'transparent' }}
+                        onMouseEnter={e => (e.currentTarget.style.background = `${product.color}06`)}
+                        onMouseLeave={e => (e.currentTarget.style.background = isActive ? `${product.color}08` : 'transparent')}
+                      >
+                        <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+                          style={{ background: `${product.color}15`, border: `1px solid ${product.color}30` }}>
+                          <Icon className="w-4 h-4" style={{ color: product.color }} />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold" style={{ color: isActive ? product.color : 'var(--text-primary)' }}>
+                            {product.label}
+                          </p>
+                          <p className="text-[10px] font-mono mt-0.5" style={{ color: 'var(--text-muted)' }}>{product.desc}</p>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Regular nav links */}
           {NAV_LINKS.map(link => {
             const isActive = pathname === link.href;
             return (
@@ -296,15 +384,43 @@ export default function NavBar() {
                   animate={{ opacity: 1, scale: 1,    y: 0 }}
                   exit={{   opacity: 0, scale: 0.95,  y: -8 }}
                   transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute right-4 top-[4.5rem] w-56 glass-strong rounded-2xl overflow-hidden shadow-2xl"
+                  className="absolute right-4 top-[4.5rem] w-64 glass-strong rounded-2xl overflow-hidden shadow-2xl"
                   style={{ border: '1px solid var(--glass-border)' }}
                 >
+                  {/* Products section in mobile */}
+                  <div className="px-4 py-2.5 border-b" style={{ borderColor: 'var(--bg-border)' }}>
+                    <p className="text-[9px] uppercase tracking-widest font-semibold" style={{ color: 'var(--text-muted)' }}>Products</p>
+                  </div>
+                  {PRODUCTS.map((product, i) => {
+                    const Icon = product.icon;
+                    return (
+                      <motion.div
+                        key={product.label}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.05 }}
+                      >
+                        <Link
+                          href={product.href}
+                          onClick={() => setMobileOpen(false)}
+                          className="flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors border-b"
+                          style={{ color: 'var(--text-secondary)', borderColor: 'var(--bg-border)' }}
+                          onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+                        >
+                          <Icon className="w-4 h-4" style={{ color: product.color }} />
+                          {product.label}
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
+                  {/* Regular nav links */}
                   {NAV_LINKS.map((link, i) => (
                     <motion.div
                       key={link.label}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.05 }}
+                      transition={{ delay: (i + PRODUCTS.length) * 0.05 }}
                     >
                       <Link
                         href={link.href}

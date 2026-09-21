@@ -36,9 +36,9 @@ function HomeInner() {
   const [otpCode, setOtpCode]     = useState('');
   const [otpLoading, setOtpLoading] = useState(false);
 
-  // Redirect authenticated users directly to analyzer
+  // Redirect authenticated users directly to the product hub
   useEffect(() => {
-    if (status === 'authenticated') router.push('/analyze');
+    if (status === 'authenticated') router.push('/misinformation');
   }, [status, router]);
 
   const update = (k: string, v: string) => {
@@ -130,8 +130,8 @@ function HomeInner() {
       if (result?.error) {
         setError(result.error);
       } else {
-        setSuccess('Account created! Redirecting...');
-        setTimeout(() => router.push('/analyze'), 1000);
+              setSuccess('Account created! Redirecting...');
+        setTimeout(() => router.push('/misinformation'), 1000);
       }
       return;
     }
@@ -152,13 +152,13 @@ function HomeInner() {
       setError(result.error);
     } else {
       setSuccess('Welcome back! Redirecting...');
-      setTimeout(() => router.push('/analyze'), 1000);
+      setTimeout(() => router.push('/misinformation'), 1000);
     }
   };
 
   const handleGoogle = async () => {
     setGoogleLoading(true);
-    await signIn('google', { callbackUrl: '/analyze' });
+    await signIn('google', { callbackUrl: '/misinformation' });
   };
 
   const passwordStrength = (p: string) => {

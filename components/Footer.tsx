@@ -6,9 +6,17 @@ import { Github, Heart, Shield, Twitter, Linkedin, ExternalLink, Zap } from 'luc
 
 const NAV_COLS = [
   {
-    heading: 'Product',
+    heading: 'Products',
+    links: [
+      { label: 'Deepfake Detection',       href: '/deepfake' },
+      { label: 'Misinformation Detection', href: '/misinformation' },
+    ],
+  },
+  {
+    heading: 'Explore',
     links: [
       { label: 'How It Works', href: '/how-it-works' },
+      { label: 'Research',     href: '/research' },
       { label: 'Technology',   href: '/technology' },
       { label: 'Analyze',      href: '/analyze' },
     ],
@@ -16,8 +24,8 @@ const NAV_COLS = [
   {
     heading: 'Company',
     links: [
-      { label: 'About',        href: '/about' },
-      { label: 'Open Source',  href: 'https://github.com/Aayush1803/Proofly', external: true },
+      { label: 'About',       href: '/about' },
+      { label: 'Open Source', href: 'https://github.com/Aayush1803/Proofly', external: true },
     ],
   },
 ];

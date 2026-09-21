@@ -11,14 +11,16 @@ import ScrollToTop from '@/components/ScrollToTop';
 export const metadata: Metadata = {
   metadataBase: new URL('https://proofly.netlify.app'),
   title: {
-    default: 'Proofly — AI Misinformation Detector for India',
+    default: 'Proofly — AI Deepfake & Misinformation Detection for India',
     template: '%s | Proofly',
   },
   description:
-    'Proofly uses a 9-step multimodal AI pipeline to detect, analyze, and counter misinformation across text, URLs, and media — in all 23 official Indian languages including Hindi, Bengali, Telugu, Marathi, Tamil, Urdu, Gujarati, Kannada, and more.',
+    'Proofly is India’s dual AI detection platform — Deepfake Detection powered by Gemini multimodal forensics, and Misinformation Detection with a 9-step fact-check pipeline across all 23 official Indian languages.',
   keywords: [
+    'deepfake detection',
     'misinformation detection',
     'fact checking AI',
+    'AI media forensics',
     'India fact check',
     'Hindi fact check',
     'Bengali fact check',
@@ -27,10 +29,11 @@ export const metadata: Metadata = {
     'Telugu fact check',
     'Urdu fact check',
     'viral content fact checker',
-    'deepfake detection',
     'Proofly',
     'Indian language AI',
     'all 23 Indian languages',
+    'GAN artifact detection',
+    'synthetic media detection',
   ],
   authors: [{ name: 'Proofly Team' }],
   creator: 'Proofly',
@@ -44,14 +47,14 @@ export const metadata: Metadata = {
     locale: 'en_IN',
     url: 'https://proofly.netlify.app',
     siteName: 'Proofly',
-    title: 'Proofly — AI Misinformation Detector for India',
+    title: 'Proofly — AI Deepfake & Misinformation Detection for India',
     description:
-      'A 9-step AI pipeline that fact-checks text, URLs, and media in all 23 official Indian languages.',
+      'Dual AI detection platform — Deepfake Detection + 9-step Misinformation fact-check in all 23 official Indian languages.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Proofly — AI Misinformation Detector',
-    description: 'Fact-check in seconds with India\'s most advanced multimodal AI.',
+    title: 'Proofly — AI Deepfake & Misinformation Detector',
+    description: 'Detect deepfakes and fact-check claims in seconds with India’s most advanced multimodal AI.',
     creator: '@proofly',
   },
 };
