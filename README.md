@@ -119,19 +119,17 @@ npx prisma db push
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [https://proof-ly.netlify.app/](https://proof-ly.netlify.app/) — or run locally at `http://localhost:3000`.
 
 > **Development note:** If `RESEND_API_KEY` is not set, OTP codes for signup are printed to the server console so you can still test the full auth flow locally.
 
 ---
 
-## Team
+## Built by
 
-| Name | Role |
-|---|---|
-| **Aayush Joshi** | Founder · Full-Stack Engineering, AI Integration, System Design, UI/UX, DevOps |
-| **Ayushmaan Srivastava** | Co-founder · Strategy, Ideation |
-| **Aditya Rauniyar** | Co-founder · Pitch Deck, Presentation Design |
+**Aayush Joshi** — Founder & Solo Engineer
+
+Full-stack engineering, AI integration, system design, UI/UX, and DevOps.
 
 ---
 
