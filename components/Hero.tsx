@@ -11,11 +11,21 @@ interface HeroProps {
 }
 
 
+// Realistic sample inputs — no "urgent forward" language, just everyday misinformation
 const SAMPLE_INPUTS = {
-  text: `🚨 URGENT FORWARD: Scientists have discovered that drinking hot water with lemon at midnight CURES cancer in just 3 days! The government doesn't want you to know this secret. Bill Gates is funding campaigns to suppress this cure. Share this before it gets deleted! Forward to all your groups!!`,
-  url: `https://www.whatsapp.com/forward?msg=breaking-news-viral-claim`,
+  text: `My uncle sent this in the family group — apparently onion juice rubbed on the scalp every night reverses baldness completely within 2 weeks. A study from AIIMS supposedly confirmed this. Has anyone tried it? The video had 4 lakh views.`,
+  url: `https://www.indiatoday.in/fact-check`,
   media: null,
 };
+
+// Rotating sample pool — so "Load sample" feels fresh
+const SAMPLE_POOL = [
+  `Eating 5 basil leaves (tulsi) daily on an empty stomach removes all toxins from the liver and prevents diabetes. A WhatsApp message said this was confirmed by Patanjali research.`,
+  `My colleague says the government is planning to cut EPFO pension by 30% from January. He got it from a news channel's WhatsApp group. Is this actually happening?`,
+  `Someone shared that Jio will start charging ₹200/month for WhatsApp calls from next month. The screenshot looked like a news article but I couldn't find the source.`,
+  `A viral reel is claiming that Indian school kids who drink fluoride-treated tap water have lower IQ scores — citing a Harvard study. My sister is worried about her kids.`,
+  `My neighbor showed me a video where someone claims lemon juice mixed with baking soda can cure COVID-19 completely within 48 hours. It had 2 million views on YouTube.`,
+];
 
 type TabType = 'text' | 'url' | 'media';
 
@@ -67,7 +77,11 @@ export default function Hero({ onSubmit, isLoading }: HeroProps) {
   };
 
   const loadSample = () => {
-    if (activeTab === 'text') setTextInput(SAMPLE_INPUTS.text);
+    if (activeTab === 'text') {
+      // Rotate through the pool pseudo-randomly
+      const idx = Math.floor(Math.random() * SAMPLE_POOL.length);
+      setTextInput(SAMPLE_POOL[idx]);
+    }
     if (activeTab === 'url') setUrlInput(SAMPLE_INPUTS.url);
   };
 
@@ -109,20 +123,18 @@ export default function Hero({ onSubmit, isLoading }: HeroProps) {
       >
         <div className="section-label mb-6">
           <span className="live-dot" />
-          Powered by Multimodal AI · India-first · All 23 Official Languages
+          India-first · 23 languages · Multimodal AI
         </div>
 
-        {/* Phase 2 — @frontend-design: Syne display font for typographic contrast */}
         <h1 className="display-font text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none mb-4">
-          <span style={{ color: 'var(--text-primary)' }}>Truth has a</span>
+          <span style={{ color: 'var(--text-primary)' }}>Is that message</span>
           <br />
-          <span className="gradient-text">new guardian.</span>
+          <span className="gradient-text">actually true?</span>
         </h1>
 
         <p className="text-lg max-w-xl mx-auto mt-5 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-          Paste a WhatsApp forward, a suspicious link, or upload a video.
-          <br />
-          <span style={{ color: 'var(--text-primary)' }} className="font-semibold">Proofly</span> runs a 9-step deep analysis in seconds.
+          Paste anything your family sent — a claim, a link, a screenshot.
+          Get a verdict in under 5 seconds, in your language.
         </p>
       </motion.div>
 
@@ -172,7 +184,7 @@ export default function Hero({ onSubmit, isLoading }: HeroProps) {
                     id="text-input"
                     value={textInput}
                     onChange={e => setTextInput(e.target.value)}
-                    placeholder="Paste a WhatsApp forward, news article, tweet, or any text claim here..."
+                    placeholder="Paste a claim, a message, or anything you&apos;re not sure about..."
                     className="w-full h-40 rounded-xl p-4 text-sm resize-none focus:outline-none transition-all duration-200 leading-relaxed font-sans"
                     style={{
                       background: 'var(--bg-secondary)',
@@ -300,7 +312,7 @@ export default function Hero({ onSubmit, isLoading }: HeroProps) {
 
         {/* Trust badges */}
         <div className="flex flex-wrap items-center justify-center gap-4 mt-6 text-xs" style={{ color: 'var(--text-muted)' }}>
-          {['India-first focus', 'All 23 Official Languages', 'Free to use', 'Hackathon project'].map((badge) => (
+          {['No account needed to try', 'All 23 Indian languages', 'Free forever', 'No data sold'].map((badge) => (
             <div key={badge} className="flex items-center gap-1.5">
               <div className="w-1 h-1 rounded-full" style={{ background: 'var(--text-muted)' }} />
               <span>{badge}</span>
@@ -369,10 +381,10 @@ export default function Hero({ onSubmit, isLoading }: HeroProps) {
       {/* Stats row */}
       <div className="flex flex-wrap justify-center gap-8 mt-16 relative z-10">
         {[
-          { value: '23', label: 'Indian Languages' },
-          { value: '9-Step', label: 'AI Pipeline' },
-          { value: 'Free', label: 'Always Free' },
-          { value: '<5s', label: 'Avg. Response Time' },
+          { value: '23',    label: 'Indian Languages' },
+          { value: '9',     label: 'Steps per Analysis' },
+          { value: '< 5s',  label: 'Avg. Time to Verdict' },
+          { value: '₹0',    label: 'Cost to You' },
         ].map((stat, i) => (
           <div key={stat.label} className="text-center">
             <div
