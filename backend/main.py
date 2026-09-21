@@ -18,7 +18,7 @@ def root():
         "service": "Mitra AI Backend",
         "version": "1.0.0",
         "status":  "running",
-        "model":   "gemini-2.5-flash",
+        "model":   "gemini-3-flash",
     })
 
 

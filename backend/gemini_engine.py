@@ -12,7 +12,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 PROMPT_FILE    = Path(__file__).parent / "prompt.txt"
 GEMINI_URL     = (
     "https://generativelanguage.googleapis.com/v1beta/models/"
-    "gemini-2.5-flash:generateContent?key={key}"
+    "gemini-3-flash:generateContent?key={key}"
 )
 
 if not GEMINI_API_KEY:
