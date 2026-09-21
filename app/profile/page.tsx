@@ -2,7 +2,7 @@
 
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -70,7 +70,7 @@ function formatDateTime(iso: string) {
 type Tab = 'analyses' | 'logins' | 'account';
 
 // ─── Main component ───────────────────────────────────────────────────────────
-export default function ProfilePage() {
+function ProfilePageInner() {
   const { data: session, status, update: updateSession } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -575,5 +575,14 @@ export default function ProfilePage() {
         )}
       </AnimatePresence>
     </main>
+  );
+}
+
+// Wrap in Suspense — required because ProfilePageInner calls useSearchParams()
+export default function ProfilePage() {
+  return (
+    <Suspense fallback={null}>
+      <ProfilePageInner />
+    </Suspense>
   );
 }
