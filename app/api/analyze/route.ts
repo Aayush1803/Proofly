@@ -24,6 +24,23 @@ CLASSIFICATION:
 - "Misleading" → partially true but missing critical context
 - "Opinion"    → clearly subjective, not verifiable
 
+SOURCES GUIDANCE (CRITICAL — read carefully):
+- You MUST provide 3-4 REAL, SPECIFIC sources that are directly relevant to the TOPIC of the claim.
+- Each source must have a real URL pointing to a relevant page (not just the homepage).
+- Choose sources based on the TOPIC of the claim:
+  * Health/Medical claims → WHO, NIH, PubMed, ICMR, MoHFW (India), WebMD, Mayo Clinic
+  * Government/Policy claims → PIB India, Press Information Bureau, official ministry websites, PRS Legislative Research
+  * Economic/Finance claims → RBI, SEBI, Ministry of Finance, Economic Survey, World Bank, IMF
+  * Science/Technology claims → Nature, Science journal, IEEE, ISRO, CSIR India
+  * Fact-check needs → Alt News, BOOM Live, India Today Fact Check, Snopes, FactCheck.org
+  * Legal/Judicial claims → Supreme Court of India (sci.gov.in), Law Commission of India
+  * Environment claims → MoEFCC India, IPCC, NASA, UNEP
+  * Agriculture claims → Ministry of Agriculture India, ICAR, FAO
+  * Sports claims → BCCI, IOC, relevant sports federation websites
+  * Political/Electoral claims → Election Commission of India, ADR India, Lok Sabha/Rajya Sabha
+- NEVER default to generic sources when specific ones apply.
+- ALWAYS use real, working URLs from official/authoritative domains.
+
 OUTPUT FORMAT (strict JSON, every field required):
 {
   "language_detected": "<detected language name>",
@@ -40,7 +57,7 @@ OUTPUT FORMAT (strict JSON, every field required):
   "fact_verification": {
     "correct_info": "<detailed correction or confirmation explaining what the evidence actually says>",
     "sources": [
-      { "name": "<source name>", "url": "<https://source.url>" }
+      { "name": "<SPECIFIC source name relevant to THIS topic>", "url": "<https://real-relevant-url.com/specific-page>" }
     ]
   },
   "explanation": {
@@ -76,15 +93,96 @@ INPUT TO ANALYZE:
 `;
 
 
-// ─── Source logo helper ────────────────────────────────────────────────────────
-const FALLBACK_SOURCES: TrustedSource[] = [
-  { name: 'Reuters Fact-Check',     url: 'https://www.reuters.com/fact-check/',     logo: 'R' },
-  { name: 'WHO',                    url: 'https://www.who.int/',                    logo: 'W' },
-  { name: 'Alt News',               url: 'https://www.altnews.in/',                 logo: 'A' },
-  { name: 'BOOM Live',              url: 'https://www.boomlive.in/',                logo: 'B' },
-  { name: 'PIB Fact Check',         url: 'https://pib.gov.in/FactCheck.aspx',       logo: 'P' },
-  { name: 'India Today Fact Check', url: 'https://www.indiatoday.in/fact-check',    logo: 'I' },
-];
+// ─── Topic-aware fallback sources ─────────────────────────────────────────────
+type TopicCategory =
+  | 'health' | 'government' | 'economy' | 'science' | 'environment'
+  | 'agriculture' | 'sports' | 'legal' | 'election' | 'default';
+
+const TOPIC_SOURCE_MAP: Record<TopicCategory, TrustedSource[]> = {
+  health: [
+    { name: 'WHO',                    url: 'https://www.who.int/news-room/fact-sheets',               logo: 'W' },
+    { name: 'ICMR India',             url: 'https://www.icmr.gov.in/',                                 logo: 'I' },
+    { name: 'MoHFW India',            url: 'https://www.mohfw.gov.in/',                                logo: 'M' },
+    { name: 'NIH PubMed',             url: 'https://pubmed.ncbi.nlm.nih.gov/',                         logo: 'N' },
+  ],
+  government: [
+    { name: 'PIB India',              url: 'https://pib.gov.in/FactCheck.aspx',                        logo: 'P' },
+    { name: 'India.gov.in',           url: 'https://www.india.gov.in/',                                logo: 'I' },
+    { name: 'PRS Legislative',        url: 'https://prsindia.org/',                                    logo: 'L' },
+    { name: 'BOOM Live',              url: 'https://www.boomlive.in/',                                 logo: 'B' },
+  ],
+  economy: [
+    { name: 'Reserve Bank of India',  url: 'https://www.rbi.org.in/',                                  logo: 'R' },
+    { name: 'Ministry of Finance',    url: 'https://www.finmin.nic.in/',                               logo: 'M' },
+    { name: 'World Bank India',       url: 'https://www.worldbank.org/en/country/india',               logo: 'W' },
+    { name: 'SEBI',                   url: 'https://www.sebi.gov.in/',                                 logo: 'S' },
+  ],
+  science: [
+    { name: 'ISRO',                   url: 'https://www.isro.gov.in/',                                 logo: 'I' },
+    { name: 'CSIR India',             url: 'https://www.csir.res.in/',                                 logo: 'C' },
+    { name: 'Nature',                 url: 'https://www.nature.com/',                                  logo: 'N' },
+    { name: 'IEEE Spectrum',          url: 'https://spectrum.ieee.org/',                               logo: 'S' },
+  ],
+  environment: [
+    { name: 'MoEFCC India',           url: 'https://moef.gov.in/',                                     logo: 'M' },
+    { name: 'IPCC',                   url: 'https://www.ipcc.ch/',                                     logo: 'I' },
+    { name: 'NASA Climate',           url: 'https://climate.nasa.gov/',                                logo: 'N' },
+    { name: 'UNEP',                   url: 'https://www.unep.org/',                                    logo: 'U' },
+  ],
+  agriculture: [
+    { name: 'Ministry of Agriculture',url: 'https://agricoop.nic.in/',                                 logo: 'M' },
+    { name: 'ICAR',                   url: 'https://icar.org.in/',                                     logo: 'I' },
+    { name: 'FAO',                    url: 'https://www.fao.org/',                                     logo: 'F' },
+    { name: 'PIB India',              url: 'https://pib.gov.in/',                                      logo: 'P' },
+  ],
+  sports: [
+    { name: 'BCCI',                   url: 'https://www.bcci.tv/',                                     logo: 'B' },
+    { name: 'Sports Authority India', url: 'https://sai.gov.in/',                                      logo: 'S' },
+    { name: 'Olympic Committee India',url: 'https://www.olympic.ind.in/',                              logo: 'O' },
+    { name: 'ESPN India',             url: 'https://www.espncricinfo.com/',                            logo: 'E' },
+  ],
+  legal: [
+    { name: 'Supreme Court of India', url: 'https://www.sci.gov.in/',                                  logo: 'S' },
+    { name: 'Law Commission India',   url: 'https://lawcommissionofindia.nic.in/',                     logo: 'L' },
+    { name: 'India Code',             url: 'https://www.indiacode.nic.in/',                            logo: 'I' },
+    { name: 'Bar & Bench',            url: 'https://www.barandbench.com/',                             logo: 'B' },
+  ],
+  election: [
+    { name: 'Election Commission',    url: 'https://eci.gov.in/',                                      logo: 'E' },
+    { name: 'ADR India',              url: 'https://adrindia.org/',                                    logo: 'A' },
+    { name: 'Lok Sabha',              url: 'https://loksabha.nic.in/',                                 logo: 'L' },
+    { name: 'BOOM Live',              url: 'https://www.boomlive.in/',                                 logo: 'B' },
+  ],
+  default: [
+    { name: 'Alt News',               url: 'https://www.altnews.in/',                                 logo: 'A' },
+    { name: 'BOOM Live',              url: 'https://www.boomlive.in/',                                 logo: 'B' },
+    { name: 'India Today Fact Check', url: 'https://www.indiatoday.in/fact-check',                    logo: 'I' },
+    { name: 'Reuters Fact-Check',     url: 'https://www.reuters.com/fact-check/',                     logo: 'R' },
+  ],
+};
+
+/** Detect topic category from the user's input text */
+function detectTopicCategory(input: string): TopicCategory {
+  const text = input.toLowerCase();
+  if (/\b(health|hospital|disease|virus|vaccine|medicine|doctor|cancer|covid|dengue|medical|cure|diet|nutrition|drug|treatment|symptom|illness|surgery|therapy|who|icmr|aiims)\b/.test(text)) return 'health';
+  if (/\b(government|minister|ministry|pm|prime minister|cabinet|bjp|congress|parliament|policy|scheme|yojana|budget|pib|niti aayog|modi|rahul|manmohan|cm|chief minister)\b/.test(text)) return 'government';
+  if (/\b(economy|gdp|inflation|rbi|bank|stock|sensex|nifty|rupee|tax|gst|finance|budget|trade|export|import|sebi|ipo|market|recession|unemployment|fiscal)\b/.test(text)) return 'economy';
+  if (/\b(science|technology|space|isro|nasa|ai|artificial intelligence|robot|satellite|moon|mars|physics|chemistry|biology|research|climate change|global warming|pollution|energy|nuclear|electric|ev|chip|semiconductor)\b/.test(text)) {
+    if (/\b(climate|pollution|environment|forest|deforestation|glacier|emission|carbon|green|biodiversity|species|wildlife|ozone)\b/.test(text)) return 'environment';
+    return 'science';
+  }
+  if (/\b(farm|farmer|crop|agriculture|harvest|kisan|msp|irrigation|soil|seed|fertilizer|wheat|rice|sugarcane|pulses|drought|flood)\b/.test(text)) return 'agriculture';
+  if (/\b(cricket|football|ipl|bcci|match|player|tournament|olympic|sport|stadium|team|coach|medal|champion|fifa|cwg|commonwealth)\b/.test(text)) return 'sports';
+  if (/\b(court|law|legal|judge|justice|verdict|bail|arrest|fir|ipc|crpc|constitution|article|section|act|supreme court|high court|advocate|lawyer|judgment)\b/.test(text)) return 'legal';
+  if (/\b(election|vote|voting|candidate|constituency|mla|mp|lok sabha|rajya sabha|assembly|ballot|eci|aadhaar|voter|bjp|congress|aap|nda|upa|exit poll|result)\b/.test(text)) return 'election';
+  return 'default';
+}
+
+/** Get topic-relevant fallback sources when Gemini doesn't return enough */
+function getFallbackSources(input: string): TrustedSource[] {
+  const category = detectTopicCategory(input);
+  return TOPIC_SOURCE_MAP[category];
+}
 
 // ─── JSON parser (3-tier) ──────────────────────────────────────────────────────
 function parseGeminiJSON(raw: string): Record<string, unknown> {
@@ -145,13 +243,18 @@ function mapResult(
   // Fact verification
   const fv = (g.fact_verification as Record<string, unknown>) ?? {};
   const rawSrc = (fv.sources as Array<Record<string, unknown>>) ?? [];
-  const sources: TrustedSource[] = rawSrc.length >= 2
-    ? rawSrc.slice(0, 4).map(s => ({
+  // Use Gemini sources if we got valid ones, otherwise use topic-aware fallbacks
+  const validSrc = rawSrc.filter(s => {
+    const url = String(s.url ?? '');
+    return url.startsWith('http') && url.length > 10 && String(s.name ?? '').length > 1;
+  });
+  const sources: TrustedSource[] = validSrc.length >= 2
+    ? validSrc.slice(0, 4).map(s => ({
         name: String(s.name ?? ''),
         url:  String(s.url  ?? '#'),
         logo: (String(s.name ?? 'X')[0] ?? 'X').toUpperCase(),
       }))
-    : FALLBACK_SOURCES.slice(0, 4);
+    : getFallbackSources(originalInput);
 
   // Explanation
   const exp = (g.explanation as Record<string, unknown>) ?? {};
