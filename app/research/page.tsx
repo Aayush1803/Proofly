@@ -25,8 +25,8 @@ const METHODOLOGY_MISINFO = [
   {
     step: '03', icon: FlaskConical, color: '#22D3EE',
     title: 'Factual Verification via Gemini',
-    desc: 'Each extracted claim is passed to Gemini 2.5 Flash, which cross-references its training knowledge base and applies logical consistency reasoning. No live web scraping is used for claim verification.',
-    tags: ['Gemini 2.5 Flash', 'Knowledge base reasoning', 'Consistency check'],
+    desc: 'Each extracted claim is passed to Gemini 3.6 Flash, which cross-references its training knowledge base and applies logical consistency reasoning. No live web scraping is used for claim verification.',
+    tags: ['Gemini 3.6 Flash', 'Knowledge base reasoning', 'Consistency check'],
   },
   {
     step: '04', icon: Shield, color: '#22C55E',
@@ -364,7 +364,7 @@ export default function ResearchPage() {
               Interested in the technical architecture?
             </h2>
             <p className="text-sm mb-6 max-w-md mx-auto" style={{ color: 'var(--text-secondary)' }}>
-              Explore the infrastructure stack — Gemini 2.5 Flash, Neon Postgres, Netlify Edge, and the multimodal pipeline internals.
+              Explore the infrastructure stack — Gemini 3.6 Flash, Neon Postgres, Netlify Edge, and the multimodal pipeline internals.
             </p>
             <Link href="/technology"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm text-white transition-all duration-300 hover:opacity-90"

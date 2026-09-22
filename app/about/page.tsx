@@ -49,7 +49,7 @@ const VALUES = [
 ];
 
 const FEATURES = [
-  { icon: '🧠', label: 'Gemini 2.5 Flash AI' },
+  { icon: '🧠', label: 'Gemini 3.6 Flash AI' },
   { icon: '🗺️', label: '23 Indian Languages' },
   { icon: '⚡', label: 'Under 30 Seconds' },
   { icon: '📊', label: '9-Step Pipeline' },

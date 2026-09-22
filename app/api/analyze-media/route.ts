@@ -143,10 +143,11 @@ export async function POST(req: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const base64Data = Buffer.from(arrayBuffer).toString('base64');
 
-    // Try models in order — prefer 2.5 flash for multimodal
-    const MODELS = ['gemini-2.5-flash', 'gemini-3.6-flash', 'gemini-flash-latest'];
+    // Try models in order — prefer 3.6 flash for multimodal
+    const MODELS = ['gemini-3.6-flash', 'gemini-flash-latest', 'gemini-3.5-flash'];
     let geminiResponse: Response | null = null;
     let lastError = '';
+    const RETRY_STATUSES = new Set([400, 404, 429, 503]);
 
     for (const model of MODELS) {
       const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
@@ -179,9 +180,10 @@ export async function POST(req: NextRequest) {
           signal: AbortSignal.timeout(55_000),
         });
 
-        if (res.status === 429 || res.status === 503) {
-          lastError = `Error ${res.status} on ${model}`;
-          console.warn(`[Media] ${res.status} on ${model}, trying next...`);
+        if (RETRY_STATUSES.has(res.status)) {
+          const errText = await res.text();
+          lastError = `HTTP ${res.status} on ${model}: ${errText.slice(0, 200)}`;
+          console.warn(`[Media] ${res.status} on ${model}, trying next... Body: ${errText.slice(0, 200)}`);
           continue;
         }
 

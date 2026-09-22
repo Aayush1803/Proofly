@@ -81,7 +81,7 @@ Proofly generates a factual, polite counter-message ready to copy and share — 
 | **Authentication** | NextAuth.js — Google OAuth2 + Credentials Provider (bcryptjs, cost factor 12) |
 | **Database** | Neon Serverless PostgreSQL |
 | **ORM** | Prisma (type-safe queries, schema management) |
-| **AI Engine** | Google Gemini 2.5 Flash (multimodal — text, image, audio, video, PDF) |
+| **AI Engine** | Google Gemini 3.6 Flash (multimodal — text, image, audio, video, PDF) |
 | **Email** | Resend (OTP delivery for email verification) |
 | **Web Scraping** | Cheerio + Fetch API — 15+ semantic HTML fallback selectors |
 | **Deployment** | Netlify Edge + Serverless Functions |

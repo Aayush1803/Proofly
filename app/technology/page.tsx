@@ -9,10 +9,10 @@ import Footer from '@/components/Footer';
 const TECH_PILLARS = [
   {
     icon: Cpu,
-    title: 'Gemini 2.5 Flash AI Engine',
+    title: 'Gemini 3.6 Flash AI Engine',
     color: '#4F8EFF',
     size: 'lg', // wider card
-    desc: 'At the heart of Proofly lies Google Gemini 2.5 Flash, accessed via the GenerativeLanguage API. We stream Base64-encoded images, video, audio, and documents directly to Gemini — native multimodal capability that evaluates visual context, spoken tone, and on-screen text holistically.',
+    desc: 'At the heart of Proofly lies Google Gemini 3.6 Flash, accessed via the GenerativeLanguage API. We stream Base64-encoded images, video, audio, and documents directly to Gemini — native multimodal capability that evaluates visual context, spoken tone, and on-screen text holistically.',
     details: ['Direct Base64 multimodal streaming', 'Native MP4, MP3, JPEG, PDF support', 'Simultaneous visual + audio analysis', 'Sub-5s reasoning for complex content'],
   },
   {
@@ -63,7 +63,7 @@ const STACK_BADGES = [
   { label: 'TypeScript 5', color: '#7C3AED' },
   { label: 'Tailwind CSS v4', color: '#F59E0B' },
   { label: 'Framer Motion', color: '#EF4444' },
-  { label: 'Gemini 2.5 Flash', color: '#4F8EFF' },
+  { label: 'Gemini 3.6 Flash', color: '#4F8EFF' },
   { label: 'Neon Postgres', color: '#22C55E' },
   { label: 'Prisma ORM', color: '#7C3AED' },
   { label: 'NextAuth.js', color: '#22D3EE' },
@@ -83,7 +83,7 @@ const FLOW_NODES = [
   { label: 'Input\n(Text/URL/Media)',  color: '#4F8EFF' },
   { label: 'Netlify\nEdge API',        color: '#7C3AED' },
   { label: 'Cheerio\nScraper',         color: '#F59E0B' },
-  { label: 'Gemini 2.5\nFlash',        color: '#22D3EE' },
+  { label: 'Gemini 3.6\nFlash',        color: '#22D3EE' },
   { label: 'Streamed\nReport',          color: '#22C55E' },
 ];
 
@@ -137,7 +137,7 @@ export default function TechnologyPage() {
           <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
             className="text-lg leading-relaxed max-w-3xl mx-auto"
             style={{ color: 'var(--text-secondary)' }}>
-            Proofly combines serverless primitives across Netlify and Neon with the bleeding-edge reasoning of Google Gemini 2.5 — infrastructure built to fight misinformation in real-time.
+            Proofly combines serverless primitives across Netlify and Neon with the bleeding-edge reasoning of Google Gemini 3.6 — infrastructure built to fight misinformation in real-time.
           </motion.p>
         </div>
       </section>

@@ -36,7 +36,7 @@ const SOCIAL = [
   { icon: Linkedin, href: 'https://www.linkedin.com/in/aayushjoshi07/', label: 'LinkedIn' },
 ];
 
-const TECH_BADGES = ['Gemini 2.5', 'Next.js 14', 'Neon DB', 'Netlify Edge', 'Prisma ORM'];
+const TECH_BADGES = ['Gemini 3.6', 'Next.js 14', 'Neon DB', 'Netlify Edge', 'Prisma ORM'];
 
 export default function Footer() {
   return (
@@ -182,7 +182,7 @@ export default function Footer() {
         >
           <div className="flex items-center gap-1.5">
             <Zap className="w-3 h-3 text-[#4F8EFF]" />
-            <span>Google Gemini 2.5 Flash · 9-step pipeline</span>
+            <span>Google Gemini 3.6 Flash · 9-step pipeline</span>
           </div>
 
           <div className="flex items-center gap-1.5">
