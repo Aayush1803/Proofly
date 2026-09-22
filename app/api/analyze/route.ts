@@ -340,8 +340,8 @@ export async function POST(req: NextRequest) {
 
     const MODELS = [
       'gemini-2.0-flash',
-      'gemini-1.5-flash',
-      'gemini-1.5-pro',
+      'gemini-1.5-flash-latest',
+      'gemini-1.5-pro-latest',
     ];
     let geminiResponse: Response | null = null;
     let lastError = '';

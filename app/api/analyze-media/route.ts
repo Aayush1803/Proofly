@@ -144,7 +144,7 @@ export async function POST(req: NextRequest) {
     const base64Data = Buffer.from(arrayBuffer).toString('base64');
 
     // Try models in order — prefer 3.6 flash for multimodal
-    const MODELS = ['gemini-3.6-flash', 'gemini-flash-latest', 'gemini-3.5-flash'];
+    const MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash-latest', 'gemini-1.5-pro-latest'];
     let geminiResponse: Response | null = null;
     let lastError = '';
     const RETRY_STATUSES = new Set([400, 404, 429, 503]);
