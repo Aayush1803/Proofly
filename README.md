@@ -2,25 +2,35 @@
 
 **Truth has a new guardian.**
 
-Proofly is India's AI-powered fact-checking platform — built to detect, analyze, and debunk misinformation across text, URLs, images, audio, video, and documents. It supports all 23 official Indian languages, understands regional cultural context, and delivers structured verdicts in seconds.
+Proofly is India's AI-powered truth verification platform — a dual-product system built to detect misinformation and synthetic media (deepfakes) across text, URLs, images, audio, video, and documents. It supports all 23 official Indian languages, understands regional cultural context, and delivers structured verdicts in seconds.
+
+---
+
+## Products
+
+### 🔍 Misinformation Detection
+Analyze any text, URL, or media file for factual accuracy. Proofly extracts verifiable claims, cross-references them against authoritative sources, scores trust, and generates a shareable counter-message — all in one 9-step pipeline.
+
+### 🎭 Deepfake & Synthetic Media Detection
+Upload any image, video, or audio file. Proofly runs multimodal AI forensics powered by Gemini to surface manipulation signals — including GAN artifacts, face-swap signatures, audio-visual sync anomalies, metadata inconsistencies, and temporal coherence breaks.
 
 ---
 
 ## Features
 
 ### Multimodal Input Support
-- **Text** — Paste any claim, message, or social media excerpt directly
-- **URLs** — Submit any public URL; Proofly extracts article content using semantic HTML parsing and intercepts YouTube URLs to pull full transcripts via the TimedText API
+- **Text** — Paste any claim, message, or social media excerpt
+- **URLs** — Proofly extracts article content via semantic HTML parsing; YouTube URLs pull full transcripts via the TimedText API
 - **Media** — Upload images, audio, video, or PDFs; analyzed natively via Gemini's multimodal API without external OCR or transcription services
 
 ### Multilingual Intelligence
 Proofly automatically detects and analyzes content in all **23 officially recognized Indian languages** (8th Schedule of the Constitution), including Hindi, English, Bengali, Telugu, Marathi, Tamil, Urdu, Gujarati, Kannada, Malayalam, Odia, Punjabi, Assamese, Maithili, Sanskrit, Kashmiri, Nepali, Sindhi, Konkani, Dogri, Manipuri, Bodo, and Santali. Code-mixed formats like Hinglish and Tanglish are fully supported.
 
-### Analysis Pipeline
+### Misinformation Analysis Pipeline (9 Steps)
 1. Input collection and type detection
 2. Language and modality identification
 3. Factual claim extraction (opinion vs. verifiable assertion)
-4. Cross-referencing against trusted sources (Alt News, BOOM Live, Reuters, WHO)
+4. Cross-referencing against topic-relevant trusted sources
 5. Manipulation detection (deepfake indicators, audio splicing)
 6. Virality risk scoring and spread prediction
 7. Regional and cultural contextualization
@@ -28,14 +38,31 @@ Proofly automatically detects and analyzes content in all **23 officially recogn
 9. Plain-language explanation and shareable counter-message
 
 ### Trust Score & Verdict
-Every analysis produces a **Trust Score** (0–100) with a breakdown across four dimensions:
+Every misinformation analysis produces a **Trust Score** (0–100) with a breakdown across four dimensions:
 - **Source Reliability** — credibility of implied or cited sources
 - **Factual Accuracy** — correctness of the specific claim
 - **Context Integrity** — accuracy of framing, omissions, or distortion
 - **Emotional Language** — detection of manipulative or fear-driven language
 
+### Deepfake Forensic Signal Coverage
+Every media scan checks for:
+- **GAN artifact detection** — pixel-level generative model fingerprints
+- **Face-swap signature scan** — identity boundary and blending anomalies
+- **Audio-visual sync analysis** — lip-sync and timing coherence
+- **Metadata forensics** — EXIF/container data inconsistencies
+- **Compression artifact analysis** — double-compression and re-encoding traces
+- **Temporal consistency check** — frame-level continuity across video sequences
+
+### Supported Media Formats
+| Type | Formats |
+|------|---------|
+| Image | JPEG · PNG · WebP · HEIC · AVIF |
+| Video | MP4 · AVI · MOV · MKV · FLV · WMV |
+| Audio | MP3 · WAV · M4A · OGG · FLAC · AAC · OPUS |
+| Document | PDF |
+
 ### Counter-Message Generation
-Proofly generates a factual, polite counter-message ready to copy and share — formatted for social media and messaging platforms to address misinformation at the source.
+Proofly generates a factual, polite counter-message ready to copy and share — formatted for WhatsApp, social media, and messaging platforms.
 
 ### User Accounts & History
 - Sign up with email/password (OTP-verified) or Google
@@ -91,7 +118,7 @@ npm install
 
 Create a `.env` file in the project root:
 ```env
-# Database
+# Database (Neon PostgreSQL)
 DATABASE_URL="postgresql://user:password@ep-your-neon-db.neon.tech/dbname?sslmode=require"
 
 # NextAuth
@@ -119,7 +146,7 @@ npx prisma db push
 npm run dev
 ```
 
-Open [https://proof-ly.netlify.app/](https://proof-ly.netlify.app/) — or run locally at `http://localhost:3000`.
+Open [https://proofly.netlify.app/](https://proofly.netlify.app/) — or run locally at `http://localhost:3000`.
 
 > **Development note:** If `RESEND_API_KEY` is not set, OTP codes for signup are printed to the server console so you can still test the full auth flow locally.
 
@@ -135,6 +162,6 @@ Full-stack engineering, AI integration, system design, UI/UX, and DevOps.
 
 ## Notes
 
-Proofly uses Google Gemini for AI-powered analysis. While the system is carefully prompted for factual accuracy, generative AI models can occasionally produce incorrect outputs. Always cross-reference critical claims with credentialed fact-checking organizations.
+Proofly uses Google Gemini for AI-powered analysis. While the system is carefully prompted for factual accuracy, generative AI models can occasionally produce incorrect outputs. The deepfake detection module is AI-assisted and not a substitute for professional forensic expert review. Always cross-reference critical claims with credentialed fact-checking organizations.
 
 *Built to bring truth back to India's information landscape.*
