@@ -179,7 +179,7 @@ export function useAnalysis(): UseAnalysisReturn {
               whatsappText: `*🔍 PROOFLY MEDIA FACT CHECK*\n\nVerdict: *${trustScore < 35 ? 'FALSE' : trustScore < 65 ? 'MISLEADING' : 'TRUE'}*\n\n${String(g.counter_message ?? '')}\n\n🔗 Verified by PROOFLY\n\n_#FactCheck #StopMisinformation #Proofly_`,
             },
             processingTime: 0,
-            modelVersion: 'gemini-2.0-flash-multimodal',
+            modelVersion: 'gemini-3.6-flash-multimodal',
           };
 
           stopStepAnimation();

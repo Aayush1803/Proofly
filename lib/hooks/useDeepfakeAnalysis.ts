@@ -171,7 +171,7 @@ export function useDeepfakeAnalysis(): UseDeepfakeAnalysisReturn {
             whatsappText: `*🔍 PROOFLY DEEPFAKE ANALYSIS*\n\nVerdict: *${trustScore < 35 ? 'LIKELY MANIPULATED' : trustScore < 65 ? 'REQUIRES SCRUTINY' : 'APPEARS AUTHENTIC'}*\n\n${String(g.counter_message ?? '')}\n\n🔗 Verified by PROOFLY\n\n_#DeepfakeDetection #MediaLiteracy #Proofly_`,
           },
           processingTime: 0,
-          modelVersion: 'gemini-2.0-flash-multimodal',
+          modelVersion: 'gemini-3.6-flash-multimodal',
         };
 
         stopStepAnimation();
