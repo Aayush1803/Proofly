@@ -8,4 +8,4 @@ Allow: /technology
 Disallow: /analyze
 Disallow: /profile
 
-Sitemap: https://mitra-ai.vercel.app/sitemap.xml
+Sitemap: https://proofly.netlify.app/sitemap.xml

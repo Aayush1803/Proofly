@@ -145,7 +145,7 @@ function getCounterMessage(score: number, language: string) {
   const tag = score < 35 ? 'FALSE' : score < 65 ? 'MISLEADING' : 'TRUE';
   const en = {
     text: `🚫 FACT CHECK [${tag}]: The viral claim circulating about this topic has been reviewed by multiple independent fact-checkers including Reuters, Alt News, and BOOM Live. ${score < 50 ? 'The information is inaccurate or missing critical context.' : 'The information has been verified as largely accurate.'} Before sharing, please verify with trusted sources. #Proofly #FactCheck #StopMisinformation`,
-    whatsappText: `*PROOFLY FACT CHECK* ✅\n\nStatus: *${tag}*\n\n${score < 50 ? '❌ This message contains false or misleading information.' : '✅ This message has been verified as accurate.'}\n\nVerified by: Reuters, Alt News, BOOM Live\n\n🔗 Full analysis: https://proofly.vercel.app\n\n_Please don\'t forward unverified messages. #FactCheck_`,
+    whatsappText: `*PROOFLY FACT CHECK* ✅\n\nStatus: *${tag}*\n\n${score < 50 ? '❌ This message contains false or misleading information.' : '✅ This message has been verified as accurate.'}\n\nVerified by: Reuters, Alt News, BOOM Live\n\n🔗 Full analysis: https://proofly.netlify.app\n\n_Please don\'t forward unverified messages. #FactCheck_`,
   };
   const hi = {
     text: `🚫 तथ्य जांच [${tag}]: इस वायरल दावे की कई स्वतंत्र संस्थाओं द्वारा जांच की गई है। ${score < 50 ? 'यह जानकारी गलत या भ्रामक है।' : 'यह जानकारी सत्यापित है।'} कृपया शेयर करने से पहले विश्वसनीय स्रोतों से जांचें। #Proofly`,
