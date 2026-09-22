@@ -147,7 +147,7 @@ export default function ResultsDashboard({ result, onReset }: ResultsDashboardPr
           <span className="gradient-text">Report</span>
         </h1>
         <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-          Mitra AI has completed the 9-step multimodal fact-check pipeline
+          Proofly has completed the 9-step multimodal fact-check pipeline
         </p>
       </motion.div>
 

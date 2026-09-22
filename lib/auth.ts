@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs';
 import prisma from './prisma';
 
 // ─── Helper: record a login event ────────────────────────────────────────────
-async function recordLoginEvent(userId: string, provider: string, req?: Request) {
+async function recordLoginEvent(userId: string, provider: string) {
   try {
     await prisma.loginEvent.create({
       data: {
