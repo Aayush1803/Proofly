@@ -306,7 +306,7 @@ function mapResult(
       whatsappText:  `*🔍 PROOFLY FACT CHECK*\n\nVerdict: *${statusTag}*\n\n${statusLine}\n\n${counterText}\n\n🔗 Verified by PROOFLY\n\n_#FactCheck #StopMisinformation #Proofly_`,
     },
     processingTime,
-    modelVersion: 'gemini-2.5-flash',
+    modelVersion: 'gemini-3.6-flash',
   };
 }
 
@@ -339,9 +339,9 @@ export async function POST(req: NextRequest) {
     const fullPrompt = PROMPT + userInput;
 
     const MODELS = [
+      'gemini-3.6-flash',
       'gemini-2.5-flash',
       'gemini-2.5-pro',
-      'gemini-2.0-flash',
     ];
     let geminiResponse: Response | null = null;
     let lastError = '';
