@@ -1,7 +1,7 @@
 'use client';
 
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
-import { Zap, ChevronDown, LogOut, User, BarChart3, Sun, Moon, Menu, X, Edit2, ScanLine, Shield } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ChevronDown, LogOut, User, Sun, Moon, Menu, X, Edit2, BarChart3 } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -9,54 +9,27 @@ import { useState, useRef, useEffect } from 'react';
 import { useTheme } from '@/components/ThemeProvider';
 import { usePathname } from 'next/navigation';
 
-const PRODUCTS = [
-  {
-    label: 'Deepfake Detection',
-    href: '/deepfake',
-    icon: ScanLine,
-    desc: 'Image · Video · Audio forensics',
-    color: '#EF4444',
-  },
-  {
-    label: 'Misinformation Detection',
-    href: '/misinformation',
-    icon: Shield,
-    desc: 'Text · URL · Media fact-check',
-    color: '#4F8EFF',
-  },
-];
-
 const NAV_LINKS = [
-  { label: 'How It Works', href: '/how-it-works' },
-  { label: 'Research',     href: '/research' },
-  { label: 'About',        href: '/about' },
+  { label: 'Verify',      href: '/misinformation' },
+  { label: 'Media',       href: '/deepfake' },
+  { label: 'Research',    href: '/research' },
+  { label: 'Technology',  href: '/technology' },
 ];
 
 export default function NavBar() {
   const { data: session, status } = useSession();
   const { theme, toggle } = useTheme();
   const pathname = usePathname();
-  const [menuOpen,      setMenuOpen]      = useState(false);
-  const [mobileOpen,    setMobileOpen]    = useState(false);
-  const [productsOpen,  setProductsOpen]  = useState(false);
-  const menuRef      = useRef<HTMLDivElement>(null);
-  const mobileRef    = useRef<HTMLDivElement>(null);
-  const productsRef  = useRef<HTMLDivElement>(null);
-
-  // Scroll-driven opacity / blur enhancement
-  const { scrollY, scrollYProgress } = useScroll();
-  const navShadow = useTransform(scrollY, [0, 80], [
-    '0 4px 16px rgba(0,0,0,0.10)',
-    '0 8px 40px rgba(0,0,0,0.28)',
-  ]);
-  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
+  const [menuOpen,   setMenuOpen]   = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const menuRef   = useRef<HTMLDivElement>(null);
+  const mobileRef = useRef<HTMLDivElement>(null);
 
   // Close dropdowns on outside click
   useEffect(() => {
     function handler(e: MouseEvent) {
-      if (menuRef.current     && !menuRef.current.contains(e.target as Node))     setMenuOpen(false);
-      if (mobileRef.current   && !mobileRef.current.contains(e.target as Node))   setMobileOpen(false);
-      if (productsRef.current && !productsRef.current.contains(e.target as Node)) setProductsOpen(false);
+      if (menuRef.current   && !menuRef.current.contains(e.target as Node))   setMenuOpen(false);
+      if (mobileRef.current && !mobileRef.current.contains(e.target as Node)) setMobileOpen(false);
     }
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -68,263 +41,166 @@ export default function NavBar() {
     : '?';
 
   return (
-    <>
-      {/* Scroll progress bar */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 z-[60] h-[2px] origin-left pointer-events-none"
-        style={{
-          scaleX,
-          background: 'linear-gradient(90deg, #4F8EFF, #7C3AED, #22D3EE)',
-          boxShadow: '0 0 8px rgba(79,142,255,0.6)',
-        }}
-      />
+    <header className="fixed top-0 left-0 right-0 z-50 proofly-nav">
+      <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
 
-      <motion.div
-        className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4 pointer-events-none"
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0,   opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      >
-      <motion.nav
-        style={{ boxShadow: navShadow }}
-        className="floating-nav pointer-events-auto w-full max-w-5xl rounded-2xl px-4 h-14 flex items-center justify-between"
-      >
-        {/* ── Logo ─────────────────────────────────────────────── */}
-        <Link href={session ? '/misinformation' : '/'} className="flex items-center gap-2.5 group flex-shrink-0">
-          <motion.div
-            whileHover={{ scale: 1.08 }}
-            transition={{ duration: 0.2 }}
-            className="relative w-9 h-9 flex-shrink-0"
-          >
+        {/* ── Logo / Wordmark ─────────────────────────────────────── */}
+        <Link
+          href={session ? '/misinformation' : '/'}
+          className="flex items-center gap-2.5 group flex-shrink-0"
+        >
+          <div className="relative w-7 h-7 flex-shrink-0">
             <Image
               src="/logo.png"
-              alt="Proofly Logo"
-              width={36}
-              height={36}
-              className="rounded-lg object-contain drop-shadow-[0_0_8px_rgba(79,142,255,0.35)] group-hover:drop-shadow-[0_0_12px_rgba(79,142,255,0.55)] transition-all"
+              alt="Proofly"
+              width={28}
+              height={28}
+              className="rounded object-contain"
               priority
             />
-          </motion.div>
-          <span style={{ color: 'var(--text-primary)' }} className="font-bold text-base tracking-tight">
-            Proofly<span className="text-[#4F8EFF]"> AI</span>
-          </span>
-          <span className="hidden sm:inline-block text-[9px] font-mono border rounded px-1.5 py-0.5"
-            style={{ color: 'var(--text-muted)', borderColor: 'var(--bg-border)' }}>
-            v3
-          </span>
+          </div>
+          <span className="brand-wordmark text-[15px]">Proofly</span>
         </Link>
 
-        {/* ── Center Nav (desktop) ──────────────────────────────── */}
+        {/* ── Center Nav (desktop) ─────────────────────────────────── */}
         <div className="hidden md:flex items-center gap-1">
-          {/* Products Dropdown */}
-          <div className="relative" ref={productsRef}>
-            <button
-              onClick={() => setProductsOpen(!productsOpen)}
-              className="relative flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-xl transition-all duration-200"
-              style={{
-                color: (pathname === '/deepfake' || pathname === '/misinformation') ? '#4F8EFF' : 'var(--text-secondary)',
-                background: productsOpen ? 'var(--bg-hover)' : 'transparent',
-              }}
-            >
-              <span>Products</span>
-              <motion.div animate={{ rotate: productsOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                <ChevronDown className="w-3.5 h-3.5" />
-              </motion.div>
-              {(pathname === '/deepfake' || pathname === '/misinformation') && (
-                <motion.div
-                  layoutId="nav-active"
-                  className="absolute inset-0 rounded-xl"
-                  style={{ background: 'rgba(79,142,255,0.08)', border: '1px solid rgba(79,142,255,0.15)' }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                />
-              )}
-            </button>
-            <AnimatePresence>
-              {productsOpen && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.94, y: -8 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.94, y: -8 }}
-                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute left-0 top-full mt-2 w-64 glass-strong rounded-2xl overflow-hidden shadow-2xl"
-                  style={{ border: '1px solid var(--glass-border)' }}
-                >
-                  <div className="px-3 py-2.5 border-b" style={{ borderColor: 'var(--bg-border)' }}>
-                    <p className="text-[10px] uppercase tracking-widest font-semibold" style={{ color: 'var(--text-muted)' }}>Detection Products</p>
-                  </div>
-                  {PRODUCTS.map(product => {
-                    const Icon = product.icon;
-                    const isActive = pathname === product.href;
-                    return (
-                      <Link
-                        key={product.label}
-                        href={product.href}
-                        onClick={() => setProductsOpen(false)}
-                        className="flex items-center gap-3 px-4 py-3.5 transition-colors"
-                        style={{ background: isActive ? `${product.color}08` : 'transparent' }}
-                        onMouseEnter={e => (e.currentTarget.style.background = `${product.color}06`)}
-                        onMouseLeave={e => (e.currentTarget.style.background = isActive ? `${product.color}08` : 'transparent')}
-                      >
-                        <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-                          style={{ background: `${product.color}15`, border: `1px solid ${product.color}30` }}>
-                          <Icon className="w-4 h-4" style={{ color: product.color }} />
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold" style={{ color: isActive ? product.color : 'var(--text-primary)' }}>
-                            {product.label}
-                          </p>
-                          <p className="text-[10px] font-mono mt-0.5" style={{ color: 'var(--text-muted)' }}>{product.desc}</p>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Regular nav links */}
           {NAV_LINKS.map(link => {
             const isActive = pathname === link.href;
             return (
               <Link
                 key={link.label}
                 href={link.href}
-                className="relative px-3 py-1.5 text-sm font-medium rounded-xl transition-all duration-200 group"
-                style={{ color: isActive ? '#4F8EFF' : 'var(--text-secondary)' }}
+                className="px-3 py-1.5 text-sm rounded-md transition-colors"
+                style={{
+                  color: isActive ? 'var(--text-primary)' : 'var(--text-tertiary)',
+                  fontWeight: isActive ? '600' : '400',
+                  background: isActive ? 'var(--bg-hover)' : 'transparent',
+                }}
+                onMouseEnter={e => {
+                  if (!isActive) e.currentTarget.style.color = 'var(--text-secondary)';
+                }}
+                onMouseLeave={e => {
+                  if (!isActive) e.currentTarget.style.color = 'var(--text-tertiary)';
+                }}
               >
-                <span className="relative z-10">{link.label}</span>
-                {isActive && (
-                  <motion.div
-                    layoutId="nav-active"
-                    className="absolute inset-0 rounded-xl"
-                    style={{ background: 'rgba(79,142,255,0.08)', border: '1px solid rgba(79,142,255,0.15)' }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                  />
-                )}
-                {!isActive && (
-                  <motion.div
-                    className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{ background: 'var(--bg-hover)' }}
-                  />
-                )}
+                {link.label}
               </Link>
             );
           })}
         </div>
 
-        {/* ── Right Side ───────────────────────────────────────── */}
+        {/* ── Right Side ──────────────────────────────────────────── */}
         <div className="flex items-center gap-2">
 
-          {/* Status dot */}
-          <div className="hidden sm:flex items-center gap-1.5 text-xs rounded-full px-2.5 py-1 border"
-            style={{ color: 'var(--text-muted)', borderColor: 'var(--bg-border)', background: 'var(--bg-secondary)' }}>
-            <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-            <span className="hidden lg:inline">Online</span>
-          </div>
-
-          {/* Theme toggle */}
-          <motion.button
+          {/* Theme toggle — quiet */}
+          <button
             onClick={toggle}
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.92 }}
-            className="w-8 h-8 rounded-xl flex items-center justify-center border transition-all duration-200"
-            style={{ background: 'var(--bg-secondary)', borderColor: 'var(--bg-border)', color: 'var(--text-secondary)' }}
+            className="w-8 h-8 rounded-md flex items-center justify-center transition-colors"
+            style={{
+              color: 'var(--text-muted)',
+              background: 'transparent',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; }}
             aria-label="Toggle theme"
           >
             <AnimatePresence mode="wait">
               <motion.div
                 key={theme}
-                initial={{ rotate: -90, opacity: 0, scale: 0.5 }}
-                animate={{ rotate: 0,   opacity: 1, scale: 1 }}
-                exit={{   rotate:  90,  opacity: 0, scale: 0.5 }}
-                transition={{ duration: 0.2 }}
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0,   opacity: 1 }}
+                exit={{   rotate:  90,  opacity: 0 }}
+                transition={{ duration: 0.15 }}
               >
                 {theme === 'dark'
-                  ? <Sun  className="w-3.5 h-3.5 text-amber-400" />
-                  : <Moon className="w-3.5 h-3.5 text-indigo-500" />
+                  ? <Sun  className="w-3.5 h-3.5" />
+                  : <Moon className="w-3.5 h-3.5" />
                 }
               </motion.div>
             </AnimatePresence>
-          </motion.button>
+          </button>
 
-          {/* Auth section */}
+          {/* Auth */}
           {status === 'loading' ? (
-            <div className="w-8 h-8 rounded-full animate-pulse" style={{ background: 'var(--bg-border)' }} />
+            <div className="w-8 h-8 rounded-full animate-pulse" style={{ background: 'var(--bg-secondary)' }} />
           ) : session ? (
             /* ── Signed in ── */
             <div className="relative" ref={menuRef}>
-              <motion.button
+              <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-                className="flex items-center gap-2 border rounded-xl px-2 py-1.5 transition-all duration-200"
-                style={{ background: 'var(--bg-secondary)', borderColor: menuOpen ? '#4F8EFF' : 'var(--bg-border)' }}
+                className="flex items-center gap-2 px-2 py-1.5 rounded-md border transition-all"
+                style={{
+                  background: 'transparent',
+                  borderColor: menuOpen ? 'var(--border-strong)' : 'var(--border)',
+                  color: 'var(--text-secondary)',
+                }}
               >
                 {user?.image ? (
                   <Image
                     src={user.image}
                     alt={user.name ?? 'User'}
-                    width={26}
-                    height={26}
-                    className="rounded-full ring-2 ring-[#4F8EFF]/30"
+                    width={22}
+                    height={22}
+                    className="rounded-full"
                   />
                 ) : (
-                  <div className="w-6.5 h-6.5 w-[26px] h-[26px] rounded-full bg-gradient-to-br from-[#4F8EFF] to-[#7C3AED] flex items-center justify-center text-[10px] font-bold text-white">
+                  <div
+                    className="w-[22px] h-[22px] rounded-full flex items-center justify-center text-[9px] font-bold text-white"
+                    style={{ background: 'var(--accent)' }}
+                  >
                     {initials}
                   </div>
                 )}
-                <span className="hidden sm:block text-sm font-medium max-w-[80px] truncate"
-                  style={{ color: 'var(--text-primary)' }}>
+                <span className="hidden sm:block text-sm font-medium max-w-[80px] truncate" style={{ color: 'var(--text-primary)' }}>
                   {user?.name?.split(' ')[0]}
                 </span>
-                <motion.div animate={{ rotate: menuOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                  <ChevronDown className="w-3.5 h-3.5" style={{ color: 'var(--text-muted)' }} />
-                </motion.div>
-              </motion.button>
+                <ChevronDown className="w-3 h-3" style={{ color: 'var(--text-muted)' }} />
+              </button>
 
-              {/* Dropdown */}
               <AnimatePresence>
                 {menuOpen && (
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.94, y: -8 }}
-                    animate={{ opacity: 1, scale: 1,    y: 0 }}
-                    exit={{   opacity: 0, scale: 0.94,  y: -8 }}
-                    transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-                    className="absolute right-0 top-full mt-2 w-56 glass-strong rounded-2xl overflow-hidden shadow-2xl"
-                    style={{ border: '1px solid var(--glass-border)' }}
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{   opacity: 0, y: -6 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 top-full mt-2 w-52 rounded-lg overflow-hidden card"
+                    style={{ boxShadow: 'var(--shadow-lg)' }}
                   >
-                    <div className="px-4 py-3 border-b" style={{ borderColor: 'var(--bg-border)' }}>
+                    <div className="px-4 py-3" style={{ borderBottom: '1px solid var(--border)' }}>
                       <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>{user?.name}</p>
-                      <p className="text-xs truncate mt-0.5"         style={{ color: 'var(--text-muted)'  }}>{user?.email}</p>
+                      <p className="text-xs truncate mt-0.5" style={{ color: 'var(--text-muted)' }}>{user?.email}</p>
                     </div>
 
                     {[
-                      { icon: <User      className="w-4 h-4" />, label: 'View Profile',  href: '/profile' },
-                      { icon: <BarChart3 className="w-4 h-4" />, label: 'My Analyses',   href: '/profile#analyses' },
-                      { icon: <Edit2     className="w-4 h-4" />, label: 'Edit Profile',  href: '/profile?edit=1' },
+                      { icon: <User      className="w-3.5 h-3.5" />, label: 'Profile',         href: '/profile' },
+                      { icon: <BarChart3 className="w-3.5 h-3.5" />, label: 'My Verifications', href: '/profile#analyses' },
+                      { icon: <Edit2     className="w-3.5 h-3.5" />, label: 'Edit Profile',    href: '/profile?edit=1' },
                     ].map(item => (
                       <Link
                         key={item.label}
                         href={item.href}
                         onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-3 text-sm transition-colors"
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors"
                         style={{ color: 'var(--text-secondary)' }}
-                        onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-hover)')}
-                        onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
                       >
-                        <span className="text-[#4F8EFF]">{item.icon}</span>
+                        <span style={{ color: 'var(--text-muted)' }}>{item.icon}</span>
                         {item.label}
                       </Link>
                     ))}
 
-                    <div className="border-t" style={{ borderColor: 'var(--bg-border)' }}>
+                    <div style={{ borderTop: '1px solid var(--border)' }}>
                       <button
                         onClick={() => { setMenuOpen(false); signOut({ callbackUrl: '/' }); }}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 transition-colors"
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors text-left"
+                        style={{ color: 'var(--semantic-false)' }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'var(--semantic-false-bg)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
                       >
-                        <LogOut className="w-4 h-4" />
-                        Sign Out
+                        <LogOut className="w-3.5 h-3.5" />
+                        Sign out
                       </button>
                     </div>
                   </motion.div>
@@ -336,32 +212,32 @@ export default function NavBar() {
             <div className="hidden sm:flex items-center gap-2">
               <Link
                 href="/"
-                className="text-sm px-3 py-1.5 rounded-xl transition-all duration-200"
-                style={{ color: 'var(--text-secondary)' }}
-                onMouseEnter={e => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.background = 'var(--bg-hover)'; }}
-                onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.background = 'transparent'; }}
+                className="text-sm px-3 py-1.5 rounded-md transition-colors"
+                style={{ color: 'var(--text-tertiary)' }}
+                onMouseEnter={e => { e.currentTarget.style.color = 'var(--text-primary)'; }}
+                onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; }}
               >
-                Sign In
+                Sign in
               </Link>
-              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                <Link
-                  href="/?mode=signup"
-                  className="flex items-center gap-1.5 text-sm font-semibold text-white px-4 py-2 rounded-xl bg-gradient-to-r from-[#4F8EFF] to-[#7C3AED] hover:opacity-90 transition-opacity shadow-lg shadow-blue-900/20"
-                >
-                  <Zap className="w-3.5 h-3.5" />
-                  Get Started
-                </Link>
-              </motion.div>
+              <Link
+                href="/?mode=signup"
+                className="btn-primary text-sm px-4 py-1.5 rounded-md"
+              >
+                Get started
+              </Link>
             </div>
           )}
 
           {/* Mobile menu button */}
           <div className="md:hidden" ref={mobileRef}>
-            <motion.button
+            <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              whileTap={{ scale: 0.9 }}
-              className="w-8 h-8 rounded-xl flex items-center justify-center border"
-              style={{ background: 'var(--bg-secondary)', borderColor: 'var(--bg-border)', color: 'var(--text-secondary)' }}
+              className="w-8 h-8 rounded-md flex items-center justify-center border transition-colors"
+              style={{
+                background: 'transparent',
+                borderColor: 'var(--border)',
+                color: 'var(--text-secondary)',
+              }}
             >
               <AnimatePresence mode="wait">
                 <motion.div
@@ -369,80 +245,56 @@ export default function NavBar() {
                   initial={{ rotate: -90, opacity: 0 }}
                   animate={{ rotate: 0,   opacity: 1 }}
                   exit={{   rotate:  90,  opacity: 0 }}
-                  transition={{ duration: 0.15 }}
+                  transition={{ duration: 0.12 }}
                 >
                   {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
                 </motion.div>
               </AnimatePresence>
-            </motion.button>
+            </button>
 
-            {/* Mobile dropdown */}
+            {/* Mobile panel */}
             <AnimatePresence>
               {mobileOpen && (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.95, y: -8 }}
-                  animate={{ opacity: 1, scale: 1,    y: 0 }}
-                  exit={{   opacity: 0, scale: 0.95,  y: -8 }}
-                  transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute right-4 top-[4.5rem] w-64 glass-strong rounded-2xl overflow-hidden shadow-2xl"
-                  style={{ border: '1px solid var(--glass-border)' }}
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{   opacity: 0, y: -8 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-4 top-[3.75rem] w-56 rounded-lg overflow-hidden card"
+                  style={{ boxShadow: 'var(--shadow-lg)' }}
                 >
-                  {/* Products section in mobile */}
-                  <div className="px-4 py-2.5 border-b" style={{ borderColor: 'var(--bg-border)' }}>
-                    <p className="text-[9px] uppercase tracking-widest font-semibold" style={{ color: 'var(--text-muted)' }}>Products</p>
-                  </div>
-                  {PRODUCTS.map((product, i) => {
-                    const Icon = product.icon;
-                    return (
-                      <motion.div
-                        key={product.label}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.05 }}
-                      >
-                        <Link
-                          href={product.href}
-                          onClick={() => setMobileOpen(false)}
-                          className="flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors border-b"
-                          style={{ color: 'var(--text-secondary)', borderColor: 'var(--bg-border)' }}
-                          onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
-                        >
-                          <Icon className="w-4 h-4" style={{ color: product.color }} />
-                          {product.label}
-                        </Link>
-                      </motion.div>
-                    );
-                  })}
-                  {/* Regular nav links */}
-                  {NAV_LINKS.map((link, i) => (
-                    <motion.div
+                  {/* Nav links */}
+                  {NAV_LINKS.map(link => (
+                    <Link
                       key={link.label}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: (i + PRODUCTS.length) * 0.05 }}
+                      href={link.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="flex items-center px-4 py-3 text-sm font-medium transition-colors"
+                      style={{
+                        color: pathname === link.href ? 'var(--text-primary)' : 'var(--text-secondary)',
+                        background: pathname === link.href ? 'var(--bg-hover)' : 'transparent',
+                        borderBottom: '1px solid var(--border)',
+                      }}
                     >
-                      <Link
-                        href={link.href}
-                        onClick={() => setMobileOpen(false)}
-                        className="block px-4 py-3 text-sm font-medium transition-colors border-b"
-                        style={{ color: 'var(--text-secondary)', borderColor: 'var(--bg-border)' }}
-                        onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
-                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
-                      >
-                        {link.label}
-                      </Link>
-                    </motion.div>
+                      {link.label}
+                    </Link>
                   ))}
+
+                  {/* Auth in mobile */}
                   {!session && (
                     <div className="p-3 flex flex-col gap-2">
-                      <Link href="/" className="block text-center py-2 text-sm rounded-xl transition-colors"
-                        style={{ color: 'var(--text-secondary)', background: 'var(--bg-hover)' }}>
-                        Sign In
+                      <Link
+                        href="/"
+                        className="block text-center py-2 text-sm rounded-md transition-colors"
+                        style={{ color: 'var(--text-secondary)', background: 'var(--bg-hover)' }}
+                      >
+                        Sign in
                       </Link>
-                      <Link href="/?mode=signup"
-                        className="block text-center py-2 text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-[#4F8EFF] to-[#7C3AED]">
-                        Get Started
+                      <Link
+                        href="/?mode=signup"
+                        className="btn-primary block text-center py-2 text-sm rounded-md"
+                      >
+                        Get started
                       </Link>
                     </div>
                   )}
@@ -451,8 +303,7 @@ export default function NavBar() {
             </AnimatePresence>
           </div>
         </div>
-      </motion.nav>
-      </motion.div>
-    </>
+      </nav>
+    </header>
   );
 }

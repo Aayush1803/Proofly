@@ -8,53 +8,82 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Neutral-first palette
         bg: {
-          primary: '#0A0A0F',
-          secondary: '#111118',
-          card: '#16161F',
-          border: '#1E1E2E',
-          hover: '#1A1A28',
+          primary:   'var(--bg-primary)',
+          secondary: 'var(--bg-secondary)',
+          card:      'var(--bg-card)',
+          border:    'var(--bg-border)',
+          hover:     'var(--bg-hover)',
+          subtle:    'var(--bg-subtle)',
         },
+        // Restrained accent
         accent: {
-          blue: '#4F8EFF',
-          indigo: '#7C3AED',
-          cyan: '#22D3EE',
+          DEFAULT: 'var(--accent)',
+          hover:   'var(--accent-hover)',
+          muted:   'var(--accent-muted)',
         },
+        // Semantic — used only where they communicate meaning
         status: {
-          true: '#22C55E',
-          false: '#EF4444',
-          misleading: '#F59E0B',
-          opinion: '#818CF8',
+          true:      '#15803D',
+          false:     '#B91C1C',
+          misleading:'#B45309',
+          opinion:   '#5B21B6',
+        },
+        // Text hierarchy
+        proofly: {
+          primary:   'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          tertiary:  'var(--text-tertiary)',
+          muted:     'var(--text-muted)',
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        sans:  ['DM Sans', 'system-ui', 'sans-serif'],
+        serif: ['Playfair Display', 'Georgia', 'serif'],
+        // Monospace ONLY for technical data
+        mono:  ['IBM Plex Mono', 'Courier New', 'monospace'],
+      },
+      fontSize: {
+        '2xs': ['0.625rem', { lineHeight: '1rem' }],
+        'xs':  ['0.75rem',  { lineHeight: '1.25rem' }],
+      },
+      letterSpacing: {
+        editorial: '0.08em',
+        label:     '0.12em',
+        widest:    '0.16em',
       },
       animation: {
-        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'spin-slow': 'spin 3s linear infinite',
-        'fade-in': 'fadeIn 0.5s ease-in-out',
-        'slide-up': 'slideUp 0.5s ease-out',
-        'glow': 'glow 2s ease-in-out infinite alternate',
+        'fade-in':   'fadeIn 0.35s ease-out',
+        'fade-up':   'fadeUp 0.4s ease-out both',
+        'reveal-up': 'reveal-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both',
+        'step-pulse': 'step-pulse 1.5s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
-          '0%': { opacity: '0' },
+          '0%':   { opacity: '0' },
           '100%': { opacity: '1' },
         },
-        slideUp: {
-          '0%': { transform: 'translateY(20px)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
+        fadeUp: {
+          '0%':   { opacity: '0', transform: 'translateY(12px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
-        glow: {
-          '0%': { boxShadow: '0 0 5px rgba(79, 142, 255, 0.3)' },
-          '100%': { boxShadow: '0 0 20px rgba(79, 142, 255, 0.6)' },
+        'reveal-up': {
+          '0%':   { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        'step-pulse': {
+          '0%, 100%': { opacity: '1' },
+          '50%':       { opacity: '0.5' },
+        },
+      },
+      boxShadow: {
+        'sm':  'var(--shadow-sm)',
+        'md':  'var(--shadow-md)',
+        'lg':  'var(--shadow-lg)',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-mesh': 'linear-gradient(135deg, #0A0A0F 0%, #111118 50%, #0A0A0F 100%)',
       },
     },
   },

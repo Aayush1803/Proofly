@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Type, Link2, Upload, X, FileText, FileAudio, FileVideo, Image as ImageIcon, Scan, Sparkles } from 'lucide-react';
+import { Type, Link2, Upload, X, FileText, FileAudio, FileVideo, Image as ImageIcon } from 'lucide-react';
 import { InputType } from '@/lib/types';
 
 interface HeroProps {
@@ -10,15 +10,6 @@ interface HeroProps {
   isLoading: boolean;
 }
 
-
-// Realistic sample inputs — everyday misinformation circulating on messaging platforms
-const SAMPLE_INPUTS = {
-  text: `A viral message is circulating in several groups claiming that onion juice applied to the scalp every night reverses baldness completely within 2 weeks. The post cites an AIIMS study as the source. The video has received over 4 lakh views online.`,
-  url: `https://www.indiatoday.in/fact-check`,
-  media: null,
-};
-
-// Rotating sample pool — so "Load sample" feels fresh
 const SAMPLE_POOL = [
   `A widely circulated health claim states that consuming 5 basil (tulsi) leaves daily on an empty stomach removes all liver toxins and prevents diabetes. The post attributes this to Patanjali research, though no published study has been cited.`,
   `A message circulating in several professional groups claims the government is planning to cut EPFO pension payouts by 30% starting January. The claim is attributed to a news channel broadcast but no official notification has been found.`,
@@ -27,12 +18,40 @@ const SAMPLE_POOL = [
   `A widely shared video claims that a mixture of lemon juice and baking soda can completely cure COVID-19 within 48 hours. The video has accumulated over 2 million views across platforms.`,
 ];
 
+const SAMPLE_URL = 'https://www.indiatoday.in/fact-check';
+
 type TabType = 'text' | 'url' | 'media';
+
+const LANGUAGES = [
+  { en: 'Hindi',     native: 'हिन्दी' },
+  { en: 'Bengali',   native: 'বাংলা' },
+  { en: 'Telugu',    native: 'తెలుగు' },
+  { en: 'Marathi',   native: 'मराठी' },
+  { en: 'Tamil',     native: 'தமிழ்' },
+  { en: 'Urdu',      native: 'اردو' },
+  { en: 'Gujarati',  native: 'ગુજરાતી' },
+  { en: 'Kannada',   native: 'ಕನ್ನಡ' },
+  { en: 'Malayalam', native: 'മലയാളം' },
+  { en: 'Punjabi',   native: 'ਪੰਜਾਬੀ' },
+  { en: 'Odia',      native: 'ଓଡ଼ିଆ' },
+  { en: 'Assamese',  native: 'অসমীয়া' },
+  { en: 'Maithili',  native: 'मैथिली' },
+  { en: 'Sanskrit',  native: 'संस्कृतम्' },
+  { en: 'Kashmiri',  native: 'کٲشُر' },
+  { en: 'Nepali',    native: 'नेपाली' },
+  { en: 'Sindhi',    native: 'سنڌي' },
+  { en: 'Konkani',   native: 'कोंकणी' },
+  { en: 'Dogri',     native: 'डोगरी' },
+  { en: 'Manipuri',  native: 'মৈতৈলোন্' },
+  { en: 'Bodo',      native: 'बड़ो' },
+  { en: 'Santali',   native: 'ᱥᱟᱱᱛᱟᱲᱤ' },
+  { en: 'English',   native: 'English' },
+];
 
 export default function Hero({ onSubmit, isLoading }: HeroProps) {
   const [activeTab, setActiveTab] = useState<TabType>('text');
   const [textInput, setTextInput] = useState('');
-  const [urlInput, setUrlInput] = useState('');
+  const [urlInput,  setUrlInput]  = useState('');
   const [dragActive, setDragActive] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -58,200 +77,220 @@ export default function Hero({ onSubmit, isLoading }: HeroProps) {
   };
 
   const getFileIcon = (file: File) => {
-    if (file.type.startsWith('video')) return <FileVideo className="w-5 h-5 text-purple-400" />;
-    if (file.type.startsWith('audio')) return <FileAudio className="w-5 h-5 text-blue-400" />;
-    if (file.type.startsWith('image')) return <ImageIcon className="w-5 h-5 text-green-400" />;
-    return <FileText className="w-5 h-5 text-gray-400" />;
+    if (file.type.startsWith('video')) return <FileVideo className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />;
+    if (file.type.startsWith('audio')) return <FileAudio className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />;
+    if (file.type.startsWith('image')) return <ImageIcon className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />;
+    return <FileText className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />;
   };
 
   const handleSubmit = () => {
     if (isLoading) return;
-    if (activeTab === 'text' && textInput.trim()) {
-      onSubmit(textInput.trim(), 'text');
-    } else if (activeTab === 'url' && urlInput.trim()) {
-      onSubmit(urlInput.trim(), 'url');
-    } else if (activeTab === 'media' && uploadedFile) {
-      // Pass the actual File object so the hook can send it to /api/analyze-media
-      onSubmit(uploadedFile.name, 'media', uploadedFile);
-    }
+    if (activeTab === 'text' && textInput.trim()) onSubmit(textInput.trim(), 'text');
+    else if (activeTab === 'url' && urlInput.trim()) onSubmit(urlInput.trim(), 'url');
+    else if (activeTab === 'media' && uploadedFile) onSubmit(uploadedFile.name, 'media', uploadedFile);
   };
 
   const loadSample = () => {
     if (activeTab === 'text') {
-      // Rotate through the pool pseudo-randomly
-      const idx = Math.floor(Math.random() * SAMPLE_POOL.length);
-      setTextInput(SAMPLE_POOL[idx]);
+      setTextInput(SAMPLE_POOL[Math.floor(Math.random() * SAMPLE_POOL.length)]);
     }
-    if (activeTab === 'url') setUrlInput(SAMPLE_INPUTS.url);
+    if (activeTab === 'url') setUrlInput(SAMPLE_URL);
   };
 
   const tabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
-    { id: 'text', label: 'Text / Message', icon: <Type className="w-4 h-4" /> },
-    { id: 'url', label: 'URL / Link', icon: <Link2 className="w-4 h-4" /> },
-    { id: 'media', label: 'Media Upload', icon: <Upload className="w-4 h-4" /> },
+    { id: 'text',  label: 'Text',  icon: <Type   className="w-3.5 h-3.5" /> },
+    { id: 'url',   label: 'URL',   icon: <Link2  className="w-3.5 h-3.5" /> },
+    { id: 'media', label: 'Media', icon: <Upload className="w-3.5 h-3.5" /> },
   ];
 
   const isReadyToSubmit =
-    (activeTab === 'text' && textInput.trim().length > 10) ||
-    (activeTab === 'url' && urlInput.trim().length > 5) ||
+    (activeTab === 'text'  && textInput.trim().length > 10) ||
+    (activeTab === 'url'   && urlInput.trim().length > 5)   ||
     (activeTab === 'media' && uploadedFile !== null);
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-4 pt-24 pb-16">
-      {/* Background decorations */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full bg-gradient-to-r from-blue-600/5 to-indigo-600/5 blur-3xl" />
-        <div className="absolute top-1/3 left-1/4 w-64 h-64 rounded-full bg-blue-600/3 blur-2xl" />
-        <div className="absolute bottom-1/3 right-1/4 w-64 h-64 rounded-full bg-indigo-600/3 blur-2xl" />
-        {/* Grid lines — color adapts to theme */}
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: 'linear-gradient(var(--glass-border) 1px, transparent 1px), linear-gradient(90deg, var(--glass-border) 1px, transparent 1px)',
-            backgroundSize: '60px 60px',
-            opacity: 0.6,
-          }}
-        />
-      </div>
-
-      {/* Hero text */}
+    <section
+      className="min-h-screen flex flex-col items-center justify-center px-4 pt-20 pb-16"
+      style={{ background: 'var(--bg-primary)' }}
+    >
+      {/* ── Page title ──────────────────────────────────────────────── */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: 'easeOut' }}
-        className="text-center mb-10 relative z-10"
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="text-center mb-10 max-w-xl"
       >
-        <div className="section-label mb-6">
-          <span className="live-dot" />
-          Powered by Multimodal AI · India-first · All 23 Official Languages
-        </div>
-
-        <h1 className="display-font text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none mb-4">
-          <span style={{ color: 'var(--text-primary)' }}>Truth has a</span>
-          <br />
-          <span className="gradient-text">new guardian.</span>
+        <p className="label-caps mb-4">
+          Misinformation analysis · India-first · 23 languages
+        </p>
+        <h1
+          className="font-serif text-4xl sm:text-5xl font-semibold leading-tight mb-4"
+          style={{ color: 'var(--text-primary)' }}
+        >
+          Verify before you share.
         </h1>
-
-        <p className="text-lg max-w-xl mx-auto mt-5 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-          Paste a viral message, a suspicious link, or upload media content.
-          <br />
-          <span style={{ color: 'var(--text-primary)' }} className="font-semibold">Proofly</span> runs a 9-step deep analysis in seconds.
+        <p className="text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+          Paste a claim, link, or upload a file. Our 9-step analysis pipeline
+          examines sources, context, and evidence.
         </p>
       </motion.div>
 
-      {/* Main card */}
+      {/* ── Verification workspace ───────────────────────────────────── */}
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
-        className="w-full max-w-3xl relative z-10"
+        transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full max-w-2xl"
       >
-        <div className="glass rounded-2xl overflow-hidden shimmer-border" style={{ border: '1px solid var(--glass-border)' }}>
-          {/* Tab bar + auto-detect badge */}
-          <div className="flex items-center justify-between px-4" style={{ borderBottom: '1px solid var(--bg-border)' }}>
-            <div className="flex">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className="flex items-center gap-2 px-4 py-4 text-sm font-medium transition-all duration-200 border-b-2"
-                  style={{
-                    borderBottomColor: activeTab === tab.id ? '#4F8EFF' : 'transparent',
-                    color: activeTab === tab.id ? '#4F8EFF' : 'var(--text-muted)',
-                  }}
-                >
+        <div
+          className="rounded-lg overflow-hidden"
+          style={{
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border)',
+            boxShadow: 'var(--shadow-md)',
+          }}
+        >
+          {/* ── Tab bar ─────────────────────────────────────────────── */}
+          <div
+            className="flex items-center gap-0 px-5"
+            style={{ borderBottom: '1px solid var(--border)' }}
+          >
+            {tabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className="flex items-center gap-2 px-3 py-3.5 text-sm transition-all border-b-2"
+                style={{
+                  borderBottomColor: activeTab === tab.id ? 'var(--accent)' : 'transparent',
+                  color: activeTab === tab.id ? 'var(--text-primary)' : 'var(--text-muted)',
+                  fontWeight: activeTab === tab.id ? '600' : '400',
+                  background: 'transparent',
+                  marginBottom: '-1px',
+                }}
+              >
+                <span style={{ color: activeTab === tab.id ? 'var(--accent)' : 'var(--text-muted)' }}>
                   {tab.icon}
-                  <span className="hidden sm:inline">{tab.label}</span>
-                </button>
-              ))}
-            </div>
-
-            {/* Auto-detect badge instead of dropdown */}
-            <div
-              className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg"
-              style={{ background: 'rgba(79,142,255,0.10)', color: '#4F8EFF', border: '1px solid rgba(79,142,255,0.20)' }}
-            >
-              <Sparkles className="w-3 h-3" />
-              <span className="font-semibold">Auto-detect language</span>
+                </span>
+                {tab.label}
+              </button>
+            ))}
+            <div className="ml-auto flex items-center gap-1.5 text-xs py-1" style={{ color: 'var(--text-muted)' }}>
+              <span
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ background: 'var(--semantic-credible)' }}
+              />
+              Auto-detect language
             </div>
           </div>
 
-          {/* Input area */}
-          <div className="p-6">
+          {/* ── Input area ──────────────────────────────────────────── */}
+          <div className="p-5">
             <AnimatePresence mode="wait">
+              {/* Text */}
               {activeTab === 'text' && (
-                <motion.div key="text" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <motion.div key="text" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }}>
                   <textarea
                     id="text-input"
                     value={textInput}
                     onChange={e => setTextInput(e.target.value)}
-                    placeholder="Paste a viral message, news article, social media post, or any text claim here..."
-                    className="w-full h-40 rounded-xl p-4 text-sm resize-none focus:outline-none transition-all duration-200 leading-relaxed font-sans"
+                    placeholder="Paste a viral message, news article, social media post, or any text claim..."
+                    rows={7}
+                    className="w-full text-sm resize-none focus:outline-none leading-relaxed rounded-md p-3.5 transition-colors"
                     style={{
                       background: 'var(--bg-secondary)',
-                      border: '1px solid var(--bg-border)',
+                      border: '1px solid var(--border)',
                       color: 'var(--text-primary)',
-                      outline: 'none',
                     }}
-                    onFocus={e => { e.target.style.borderColor = '#4F8EFF'; e.target.style.boxShadow = '0 0 0 3px rgba(79,142,255,0.12)'; }}
-                    onBlur={e =>  { e.target.style.borderColor = 'var(--bg-border)'; e.target.style.boxShadow = 'none'; }}
+                    onFocus={e => { e.target.style.borderColor = 'var(--accent)'; }}
+                    onBlur={e => { e.target.style.borderColor = 'var(--border)'; }}
                     disabled={isLoading}
                   />
                   <div className="flex items-center justify-between mt-2">
                     <button
                       onClick={loadSample}
-                      className="text-xs text-[#4F8EFF] hover:text-[#6BA3FF] transition-colors"
+                      className="text-xs transition-colors"
+                      style={{ color: 'var(--accent)' }}
+                      onMouseEnter={e => { e.currentTarget.style.opacity = '0.75'; }}
+                      onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
                     >
-                      Load sample input
+                      Load sample
                     </button>
-                    <span className="text-xs font-mono" style={{ color: 'var(--text-muted)' }}>{textInput.length} chars</span>
+                    <span className="text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
+                      {textInput.length} chars
+                    </span>
                   </div>
                 </motion.div>
               )}
 
+              {/* URL */}
               {activeTab === 'url' && (
-                <motion.div key="url" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <motion.div key="url" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }}>
                   <div className="relative">
-                    <Link2 className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4A4A60]" />
+                    <Link2
+                      className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4"
+                      style={{ color: 'var(--text-muted)' }}
+                    />
                     <input
                       id="url-input"
                       type="url"
                       value={urlInput}
                       onChange={e => setUrlInput(e.target.value)}
                       placeholder="https://example.com/article-to-verify"
-                      className="w-full rounded-xl pl-11 pr-4 py-4 text-sm font-mono transition-all duration-200"
-                      style={{ background: 'var(--bg-secondary)', border: '1px solid var(--bg-border)', color: 'var(--text-primary)' }}
-                      onFocus={e => { e.target.style.borderColor = '#4F8EFF'; e.target.style.boxShadow = '0 0 0 3px rgba(79,142,255,0.12)'; }}
-                      onBlur={e =>  { e.target.style.borderColor = 'var(--bg-border)'; e.target.style.boxShadow = 'none'; }}
+                      className="w-full rounded-md pl-10 pr-4 py-3 text-sm font-mono transition-colors focus:outline-none"
+                      style={{
+                        background: 'var(--bg-secondary)',
+                        border: '1px solid var(--border)',
+                        color: 'var(--text-primary)',
+                      }}
+                      onFocus={e => { e.target.style.borderColor = 'var(--accent)'; }}
+                      onBlur={e => { e.target.style.borderColor = 'var(--border)'; }}
                       disabled={isLoading}
                     />
                   </div>
-                  <p className="text-xs mt-3" style={{ color: 'var(--text-muted)' }}>
-                    Supports news articles, YouTube videos, Twitter/X posts, Instagram reels, blog posts, Wikipedia pages, and any public URL.
-                  </p>
-                  <button onClick={loadSample} className="text-xs text-[#4F8EFF] hover:text-[#6BA3FF] transition-colors mt-1">
-                    Load sample URL
-                  </button>
+                  <div className="flex items-center justify-between mt-2">
+                    <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                      Supports news articles, YouTube, Twitter/X, Instagram, blogs, and any public URL.
+                    </p>
+                    <button
+                      onClick={loadSample}
+                      className="text-xs flex-shrink-0 ml-4"
+                      style={{ color: 'var(--accent)' }}
+                      onMouseEnter={e => { e.currentTarget.style.opacity = '0.75'; }}
+                      onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
+                    >
+                      Load sample
+                    </button>
+                  </div>
                 </motion.div>
               )}
 
+              {/* Media */}
               {activeTab === 'media' && (
-                <motion.div key="media" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <motion.div key="media" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }}>
                   {uploadedFile ? (
-                    <div className="flex items-center justify-between rounded-xl p-4" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--bg-border)' }}>
-                      <div className="flex items-center gap-3">
-                        {getFileIcon(uploadedFile)}
-                        <div>
-                          <p className="text-sm font-medium truncate max-w-xs" style={{ color: 'var(--text-primary)' }}>{uploadedFile.name}</p>
-                          <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-                            {uploadedFile.size > 1024 * 1024
-                              ? `${(uploadedFile.size / 1024 / 1024).toFixed(1)} MB`
-                              : `${(uploadedFile.size / 1024).toFixed(0)} KB`
-                            } · {uploadedFile.type || 'unknown type'}
-                          </p>
-                        </div>
+                    <div
+                      className="flex items-center gap-3 rounded-md p-3.5"
+                      style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)' }}
+                    >
+                      {getFileIcon(uploadedFile)}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>
+                          {uploadedFile.name}
+                        </p>
+                        <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
+                          {uploadedFile.size > 1024 * 1024
+                            ? `${(uploadedFile.size / 1024 / 1024).toFixed(1)} MB`
+                            : `${(uploadedFile.size / 1024).toFixed(0)} KB`
+                          } · {uploadedFile.type || 'unknown type'}
+                        </p>
                       </div>
-                      <button onClick={() => setUploadedFile(null)} className="text-[#4A4A60] hover:text-red-400 transition-colors">
+                      <button
+                        onClick={() => setUploadedFile(null)}
+                        className="transition-colors"
+                        style={{ color: 'var(--text-muted)' }}
+                        onMouseEnter={e => { e.currentTarget.style.color = 'var(--semantic-false)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; }}
+                      >
                         <X className="w-4 h-4" />
                       </button>
                     </div>
@@ -262,142 +301,131 @@ export default function Hero({ onSubmit, isLoading }: HeroProps) {
                       onDragOver={handleDrag}
                       onDrop={handleDrop}
                       onClick={() => fileRef.current?.click()}
-                      className="relative h-40 border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all duration-200"
+                      className="h-36 border-2 border-dashed rounded-md flex flex-col items-center justify-center cursor-pointer transition-all"
                       style={{
-                        borderColor: dragActive ? '#4F8EFF' : 'var(--bg-border)',
-                        background: dragActive ? 'rgba(79,142,255,0.05)' : 'var(--bg-secondary)',
+                        borderColor: dragActive ? 'var(--accent)' : 'var(--border)',
+                        background: dragActive ? 'var(--accent-muted)' : 'var(--bg-secondary)',
                       }}
                     >
-                      <div className="relative">
-                        <Upload className="w-8 h-8 mx-auto mb-3" style={{ color: 'var(--text-muted)' }} />
-                        {dragActive && <div className="scan-line" />}
-                      </div>
-                      <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Drop media file or <span className="text-[#4F8EFF]">browse</span></p>
-                      <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>Images · Audio · Video · PDF · Max 20MB</p>
-                      <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>JPEG, PNG, WebP, GIF, MP3, WAV, MP4, AVI, MOV, MKV, PDF...</p>
+                      <Upload className="w-6 h-6 mb-2" style={{ color: 'var(--text-muted)' }} />
+                      <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                        Drop a file or{' '}
+                        <span style={{ color: 'var(--accent)' }}>browse</span>
+                      </p>
+                      <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
+                        Images · Audio · Video · PDF · Max 20 MB
+                      </p>
                     </div>
                   )}
-                  <input ref={fileRef} type="file"
+                  <input
+                    ref={fileRef}
+                    type="file"
                     accept="image/*,audio/*,video/*,application/pdf,text/plain,.heic,.heif,.avif,.mkv,.avi,.mov,.flv,.wmv,.m4a,.flac,.ogg,.opus,.aac"
-                    onChange={handleFileChange} className="hidden" />
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Submit button */}
-            {/* Phase 3 — @design-spells: glow-pulse on active CTA button */}
-            <motion.button
+            {/* ── Submit ──────────────────────────────────────────────── */}
+            <button
               id="analyze-button"
               onClick={handleSubmit}
               disabled={!isReadyToSubmit || isLoading}
-              whileHover={isReadyToSubmit && !isLoading ? { scale: 1.02 } : {}}
-              whileTap={isReadyToSubmit && !isLoading ? { scale: 0.98 } : {}}
-              className={`mt-5 w-full py-4 rounded-xl text-sm font-semibold flex items-center justify-center gap-3 transition-all duration-300${
-                isReadyToSubmit && !isLoading ? ' btn-premium btn-glow-pulse' : ''
-              }`}
-              style={!isReadyToSubmit || isLoading ? {
-                background: 'var(--bg-secondary)',
-                color: 'var(--text-muted)',
-                border: '1px solid var(--bg-border)',
-                cursor: 'not-allowed',
-              } : {}}
+              className="mt-4 w-full py-3 rounded-md text-sm font-semibold flex items-center justify-center gap-2 transition-all disabled:cursor-not-allowed"
+              style={
+                isReadyToSubmit && !isLoading
+                  ? { background: 'var(--accent)', color: '#fff' }
+                  : { background: 'var(--bg-secondary)', color: 'var(--text-muted)', border: '1px solid var(--border)' }
+              }
+              onMouseEnter={e => {
+                if (isReadyToSubmit && !isLoading) e.currentTarget.style.background = 'var(--accent-hover)';
+              }}
+              onMouseLeave={e => {
+                if (isReadyToSubmit && !isLoading) e.currentTarget.style.background = 'var(--accent)';
+              }}
             >
-              <Scan className="w-4 h-4" />
-              {isLoading ? 'Analyzing...' : 'Run Deep Analysis'}
-              {isReadyToSubmit && !isLoading && (
-                <span className="text-xs opacity-70 font-normal">~3–5 sec</span>
+              {isLoading ? (
+                <>
+                  <span
+                    className="w-3.5 h-3.5 rounded-full border-2 border-t-transparent animate-spin"
+                    style={{ borderColor: 'rgba(255,255,255,0.5)', borderTopColor: 'transparent' }}
+                  />
+                  Analyzing…
+                </>
+              ) : (
+                <>
+                  Run verification
+                  {isReadyToSubmit && (
+                    <span className="text-xs opacity-70 font-normal">~3–5 sec</span>
+                  )}
+                </>
               )}
-            </motion.button>
+            </button>
           </div>
         </div>
 
-        {/* Trust badges */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mt-6 text-xs" style={{ color: 'var(--text-muted)' }}>
-          {['India-first focus', 'All 23 Official Languages', 'Free to use', 'Hackathon project'].map((badge) => (
+        {/* ── Trust indicators ────────────────────────────────────────── */}
+        <div className="flex flex-wrap items-center justify-center gap-5 mt-5 text-xs" style={{ color: 'var(--text-muted)' }}>
+          {['India-first context', '23 official languages', 'Free to use', 'Open source'].map(badge => (
             <div key={badge} className="flex items-center gap-1.5">
-              <div className="w-1 h-1 rounded-full" style={{ background: 'var(--text-muted)' }} />
-              <span>{badge}</span>
+              <div className="w-1 h-1 rounded-full" style={{ background: 'var(--border-strong)' }} />
+              {badge}
             </div>
           ))}
         </div>
 
-        {/* 23 Languages Showcase */}
+        {/* ── Language grid ────────────────────────────────────────────── */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
-          className="mt-8 w-full max-w-3xl relative z-10"
+          transition={{ delay: 0.45, duration: 0.5 }}
+          className="mt-8"
         >
-          <div className="glass rounded-2xl border border-white/[0.06] p-5">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="section-label">
-                🌐 23 Supported Languages
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {[
-                { en: 'Hindi',       native: 'हिन्दी' },
-                { en: 'English',     native: 'English' },
-                { en: 'Bengali',     native: 'বাংলা' },
-                { en: 'Telugu',      native: 'తెలుగు' },
-                { en: 'Marathi',     native: 'मराठी' },
-                { en: 'Tamil',       native: 'தமிழ்' },
-                { en: 'Urdu',        native: 'اردو' },
-                { en: 'Gujarati',    native: 'ગુજરાતી' },
-                { en: 'Kannada',     native: 'ಕನ್ನಡ' },
-                { en: 'Malayalam',   native: 'മലയാളം' },
-                { en: 'Odia',        native: 'ଓଡ଼ିଆ' },
-                { en: 'Punjabi',     native: 'ਪੰਜਾਬੀ' },
-                { en: 'Assamese',    native: 'অসমীয়া' },
-                { en: 'Maithili',    native: 'मैथिली' },
-                { en: 'Sanskrit',    native: 'संस्कृतम्' },
-                { en: 'Kashmiri',    native: 'کٲشُر' },
-                { en: 'Nepali',      native: 'नेपाली' },
-                { en: 'Sindhi',      native: 'سنڌي' },
-                { en: 'Konkani',     native: 'कोंकणी' },
-                { en: 'Dogri',       native: 'डोगरी' },
-                { en: 'Manipuri',    native: 'মৈতৈলোন্' },
-                { en: 'Bodo',        native: 'बड़ो' },
-                { en: 'Santali',     native: 'ᱥᱟᱱᱛᱟᱲᱤ' },
-              ].map((lang, i) => (
-                <motion.div
+          <div
+            className="rounded-lg p-5"
+            style={{
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border)',
+            }}
+          >
+            <p className="label-caps mb-4">23 supported languages</p>
+            <div className="flex flex-wrap gap-1.5">
+              {LANGUAGES.map(lang => (
+                <div
                   key={lang.en}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.65 + i * 0.03, duration: 0.3 }}
-                  className="frosted-badge flex items-center gap-1.5 cursor-default"
                   title={lang.en}
+                  className="px-2.5 py-1 rounded text-xs cursor-default transition-colors"
+                  style={{
+                    background: 'var(--bg-secondary)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text-secondary)',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = 'var(--bg-hover)';
+                    e.currentTarget.style.color = 'var(--text-primary)';
+                    e.currentTarget.style.borderColor = 'var(--border-strong)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'var(--bg-secondary)';
+                    e.currentTarget.style.color = 'var(--text-secondary)';
+                    e.currentTarget.style.borderColor = 'var(--border)';
+                  }}
                 >
-                  <span className="text-[#4F8EFF] text-[10px] font-mono">{lang.native}</span>
-                  <span className="text-[9px] opacity-50">·</span>
-                  <span className="text-[10px]">{lang.en}</span>
-                </motion.div>
+                  <span>{lang.native}</span>
+                  <span
+                    className="text-[10px] ml-1"
+                    style={{ color: 'var(--text-muted)' }}
+                  >
+                    {lang.en !== lang.native && lang.en}
+                  </span>
+                </div>
               ))}
             </div>
           </div>
         </motion.div>
       </motion.div>
-
-
-      {/* Stats row */}
-      <div className="flex flex-wrap justify-center gap-10 mt-16 relative z-10">
-        {[
-          { value: '23',    label: 'Indian Languages' },
-          { value: '9-Step', label: 'AI Pipeline' },
-          { value: 'Free',   label: 'Always Free' },
-          { value: '<5s',    label: 'Avg. Response Time' },
-        ].map((stat, i) => (
-          <div key={stat.label} className="text-center">
-            <div
-              className="stat-number text-2xl gradient-text counter-reveal"
-              style={{ animationDelay: `${0.5 + i * 0.12}s` }}
-            >
-              {stat.value}
-            </div>
-            <div className="text-xs mt-1 mono-font" style={{ color: 'var(--text-muted)' }}>{stat.label}</div>
-          </div>
-        ))}
-      </div>
     </section>
   );
 }
