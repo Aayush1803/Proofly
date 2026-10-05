@@ -7,15 +7,16 @@ import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import NavBar from '@/components/NavBar';
 import Hero from '@/components/Hero';
-import ProcessingState from '@/components/ProcessingState';
-import ResultsDashboard from '@/components/ResultsDashboard';
-import { useAnalysis } from '@/lib/hooks/useAnalysis';
+import ProcessingView from '@/components/ProcessingView';
+import VerificationReport from '@/components/VerificationReport';
+import ErrorState from '@/components/ErrorState';
+import { useVerification, MISINFO_STAGES } from '@/lib/hooks/useVerification';
+import { InputType } from '@/lib/api/types';
 
 export default function MisinformationPage() {
   const { status } = useSession();
   const router = useRouter();
-
-  const { appState, currentStep, result, error, handleSubmit, handleReset } = useAnalysis();
+  const { appState, currentStep, stages, result, error, submit, reset } = useVerification('misinfo');
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/');
@@ -31,102 +32,64 @@ export default function MisinformationPage() {
 
   if (status === 'unauthenticated') return null;
 
+  const handleSubmit = (input: string, type: InputType, file?: File) => {
+    submit(input, type, file);
+  };
+
   return (
     <main className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
       <NavBar />
 
       <AnimatePresence mode="wait">
-        {/* Idle — show input workspace */}
         {appState === 'idle' && (
           <motion.div
-            key="hero"
+            key="idle"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0, y: -16 }}
+            exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.3 }}
           >
-            <Hero
-              onSubmit={(input, type, file) => handleSubmit(input, type, file)}
-              isLoading={false}
-            />
+            <Hero onSubmit={handleSubmit} isLoading={false} />
           </motion.div>
         )}
 
-        {/* Processing */}
         {appState === 'processing' && (
           <motion.div
             key="processing"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen flex flex-col items-center justify-center pt-20 pb-16 px-4"
           >
-            <div className="text-center mb-8">
-              <p className="label-caps mb-3">Running verification pipeline</p>
-              <h2 className="font-serif text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-                Analyzing content
-              </h2>
-              <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>
-                Our 9-step AI pipeline is examining your content...
-              </p>
-            </div>
-            <ProcessingState isVisible={true} currentStep={currentStep} />
+            <ProcessingView
+              stages={stages}
+              currentStep={currentStep}
+              title="Analyzing content"
+              subtitle="Running misinformation detection pipeline…"
+            />
           </motion.div>
         )}
 
-        {/* Results */}
         {appState === 'results' && result && (
           <motion.div
             key="results"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen pt-20 pb-16"
+            className="pt-20 pb-16"
           >
-            <div className="max-w-5xl mx-auto px-4 mb-8 text-center">
-              <p className="label-caps mb-2">9-step pipeline complete</p>
-              <h2 className="font-serif text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>
-                Verification report
-              </h2>
-            </div>
-            <ResultsDashboard result={result} onReset={handleReset} />
+            <VerificationReport result={result} onReset={reset} />
           </motion.div>
         )}
 
-        {/* Error */}
         {appState === 'error' && (
           <motion.div
             key="error"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen flex flex-col items-center justify-center px-4 pt-20"
+            className="min-h-screen flex items-center justify-center pt-20 px-4"
           >
-            <div
-              className="rounded-lg p-8 max-w-md w-full text-center"
-              style={{
-                background: 'var(--bg-card)',
-                border: '1px solid var(--semantic-false-border)',
-                boxShadow: 'var(--shadow-md)',
-              }}
-            >
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-4"
-                style={{ background: 'var(--semantic-false-bg)', border: '1px solid var(--semantic-false-border)' }}
-              >
-                <span className="text-sm" style={{ color: 'var(--semantic-false)' }}>!</span>
-              </div>
-              <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
-                Analysis failed
-              </h3>
-              <p className="text-sm mb-6" style={{ color: 'var(--text-muted)' }}>{error}</p>
-              <button
-                onClick={handleReset}
-                className="btn-primary w-full py-2.5 rounded-md font-semibold text-sm"
-              >
-                Try again
-              </button>
-            </div>
+            <ErrorState message={error ?? 'Analysis failed. Please try again.'} onRetry={reset} />
           </motion.div>
         )}
       </AnimatePresence>

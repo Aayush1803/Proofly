@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Type, Link2, Upload, X, FileText, FileAudio, FileVideo, Image as ImageIcon } from 'lucide-react';
-import { InputType } from '@/lib/types';
+import { InputType } from '@/lib/api/types';
 
 interface HeroProps {
   onSubmit: (input: string, type: InputType, file?: File) => void;
