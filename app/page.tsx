@@ -182,7 +182,7 @@ function HomeInner() {
           >
             Proofly analyzes claims, articles, and media for credibility.
             Our verification pipeline examines sources, context, and evidence
-            across India's information landscape.
+            across India&apos;s information landscape.
           </motion.p>
 
           {/* Capabilities — understated list */}
